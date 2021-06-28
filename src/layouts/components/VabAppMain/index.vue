@@ -19,7 +19,6 @@
         show: false,
         fullYear: new Date().getFullYear(),
         copyright,
-        title,
         keepAliveMaxNum,
         routerView: true,
         footerCopyright,

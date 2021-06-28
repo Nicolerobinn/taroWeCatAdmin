@@ -61,8 +61,6 @@
 <script>
   import VabChart from '@/plugins/echarts'
   import { dependencies, devDependencies } from '../../../package.json'
-  import { getList } from '@/api/changeLog'
-  import { getNoticeList } from '@/api/notice'
 
   export default {
     name: 'Index',
