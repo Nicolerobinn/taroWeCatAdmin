@@ -16,6 +16,7 @@ const {
   providePlugin,
   build7z,
   donation,
+  baseURL,
 } = require('./src/config')
 const { webpackBarName, webpackBanner, donationConsole } = require('zx-layouts')
 
@@ -27,8 +28,8 @@ const FileManagerPlugin = require('filemanager-webpack-plugin')
 const dayjs = require('dayjs')
 const date = dayjs().format('YYYY_M_D')
 const time = dayjs().format('YYYY-M-D HH:mm:ss')
-process.env.VUE_APP_TITLE = title || 'vue-admin-beautiful'
-process.env.VUE_APP_AUTHOR = author || 'chuzhixin 1204505056@qq.com'
+process.env.VUE_APP_TITLE = title || 'admin'
+process.env.VUE_APP_AUTHOR = author || ''
 process.env.VUE_APP_UPDATE_TIME = time
 process.env.VUE_APP_VERSION = version
 
@@ -54,7 +55,13 @@ module.exports = {
       warnings: true,
       errors: true,
     },
-    after: mockServer(),
+    proxy: {
+      '/msd': {
+        target: baseURL, // 后台接口域名
+        changeOrigin: true, // 是否跨域
+      },
+    },
+    // after: mockServer(),
   },
   configureWebpack() {
     return {

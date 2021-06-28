@@ -3,13 +3,16 @@ import { encryptedData } from '@/utils/encrypt'
 import { loginRSA, tokenName } from '@/config'
 
 export async function login(data) {
+  const { username, password } = data || {}
+  let word = password
   if (loginRSA) {
-    data = await encryptedData(data)
+    const res = await encryptedData(password)
+    word = res.param
   }
   return request({
-    url: '/login',
+    url: 'web/webUser/login',
     method: 'post',
-    data,
+    data: { userName: username, password: word },
   })
 }
 
