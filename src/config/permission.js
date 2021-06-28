@@ -35,6 +35,7 @@ router.beforeResolve(async (to, from, next) => {
       const hasPermissions =
         store.getters['user/permissions'] &&
         store.getters['user/permissions'].length > 0
+      console.log(hasPermissions)
       if (hasPermissions) {
         next()
       } else {
@@ -44,8 +45,6 @@ router.beforeResolve(async (to, from, next) => {
             //settings.js loginInterception为false时，创建虚拟权限
             await store.dispatch('user/setPermissions', ['admin'])
             permissions = ['admin']
-          } else {
-            permissions = await store.dispatch('user/getUserInfo')
           }
 
           let accessRoutes = []

@@ -1,21 +1,21 @@
-import { storage, tokenTableName } from '@/config'
+import { storage } from '@/config'
 
 /**
  * @author chuzhixin 1204505056@qq.com （不想保留author可删除）
  * @description 获取accessToken
  * @returns {string|ActiveX.IXMLDOMNode|Promise<any>|any|IDBRequest<any>|MediaKeyStatus|FormDataEntryValue|Function|Promise<Credential | null>}
  */
-export function getAccessToken() {
+export function getAccessToken(str) {
   if (storage) {
     if ('localStorage' === storage) {
-      return localStorage.getItem(tokenTableName)
+      return localStorage.getItem(str)
     } else if ('sessionStorage' === storage) {
-      return sessionStorage.getItem(tokenTableName)
+      return sessionStorage.getItem(str)
     } else {
-      return localStorage.getItem(tokenTableName)
+      return localStorage.getItem(str)
     }
   } else {
-    return localStorage.getItem(tokenTableName)
+    return localStorage.getItem(str)
   }
 }
 
@@ -25,17 +25,17 @@ export function getAccessToken() {
  * @param accessToken
  * @returns {void|*}
  */
-export function setAccessToken(accessToken) {
+export function setAccessToken(str, any) {
   if (storage) {
     if ('localStorage' === storage) {
-      return localStorage.setItem(tokenTableName, accessToken)
+      return localStorage.setItem(str, any)
     } else if ('sessionStorage' === storage) {
-      return sessionStorage.setItem(tokenTableName, accessToken)
+      return sessionStorage.setItem(str, any)
     } else {
-      return localStorage.setItem(tokenTableName, accessToken)
+      return localStorage.setItem(str, any)
     }
   } else {
-    return localStorage.setItem(tokenTableName, accessToken)
+    return localStorage.setItem(str, any)
   }
 }
 
@@ -44,16 +44,16 @@ export function setAccessToken(accessToken) {
  * @description 移除accessToken
  * @returns {void|Promise<void>}
  */
-export function removeAccessToken() {
+export function removeAccessToken(str) {
   if (storage) {
     if ('localStorage' === storage) {
-      return localStorage.removeItem(tokenTableName)
+      return localStorage.removeItem(str)
     } else if ('sessionStorage' === storage) {
       return sessionStorage.clear()
     } else {
-      return localStorage.removeItem(tokenTableName)
+      return localStorage.removeItem(str)
     }
   } else {
-    return localStorage.removeItem(tokenTableName)
+    return localStorage.removeItem(str)
   }
 }

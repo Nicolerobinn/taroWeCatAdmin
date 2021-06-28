@@ -4,20 +4,20 @@
  */
 
 import Vue from 'vue'
-import { getUserInfo, login, logout } from '@/api/user'
+import { login } from '@/api/user'
 import {
   getAccessToken,
   removeAccessToken,
   setAccessToken,
 } from '@/utils/accessToken'
 import { resetRouter } from '@/router'
-import { title, tokenName } from '@/config'
+import { title, tokenName, tokenTableName } from '@/config'
 
 const state = () => ({
-  accessToken: getAccessToken(),
+  accessToken: getAccessToken(tokenTableName),
   username: '',
   avatar: '',
-  permissions: [],
+  permissions: getAccessToken('router-code') || [],
 })
 const getters = {
   accessToken: (state) => state.accessToken,
@@ -28,7 +28,7 @@ const getters = {
 const mutations = {
   setAccessToken(state, accessToken) {
     state.accessToken = accessToken
-    setAccessToken(accessToken)
+    setAccessToken(tokenTableName, accessToken)
   },
   setUsername(state, username) {
     state.username = username
@@ -37,7 +37,9 @@ const mutations = {
     state.avatar = avatar
   },
   setPermissions(state, permissions) {
-    state.permissions = permissions
+    const arr = permissions.map((e, i) => e.code)
+    setAccessToken('router-code', arr)
+    state.permissions = arr
   },
 }
 const actions = {
@@ -46,9 +48,19 @@ const actions = {
   },
   async login({ commit }, userInfo) {
     const { data } = await login(userInfo)
-    const accessToken = data[tokenName]
-    if (accessToken) {
-      commit('setAccessToken', accessToken)
+    const { token, user } = data ?? {}
+    const {
+      nickname,
+      webRole: { menuList },
+    } = user ?? {}
+    if (token) {
+      commit('setPermissions', menuList)
+      commit(
+        'setAvatar',
+        'https://i.gtimg.cn/club/item/face/img/2/15922_100.gif'
+      )
+      commit('setUsername', nickname)
+      commit('setAccessToken', token)
       const hour = new Date().getHours()
       const thisTime =
         hour < 8
@@ -68,25 +80,7 @@ const actions = {
       )
     }
   },
-  async getUserInfo({ commit, state }) {
-    const { data } = await getUserInfo(state.accessToken)
-    if (!data) {
-      Vue.prototype.$baseMessage('验证失败，请重新登录...', 'error')
-      return false
-    }
-    let { permissions, username, avatar } = data
-    if (permissions && username && Array.isArray(permissions)) {
-      commit('setPermissions', permissions)
-      commit('setUsername', username)
-      commit('setAvatar', avatar)
-      return permissions
-    } else {
-      Vue.prototype.$baseMessage('用户信息接口异常', 'error')
-      return false
-    }
-  },
   async logout({ dispatch }) {
-    await logout(state.accessToken)
     await dispatch('resetAccessToken')
     await resetRouter()
   },

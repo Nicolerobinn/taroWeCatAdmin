@@ -3,6 +3,7 @@ import * as lodash from 'lodash'
 import { Loading, Message, MessageBox, Notification } from 'element-ui'
 import store from '@/store'
 import { getAccessToken } from '@/utils/accessToken'
+import { tokenTableName } from '@/config'
 
 const accessToken = store.getters['user/accessToken']
 const layout = store.getters['settings/layout']
@@ -10,7 +11,7 @@ const layout = store.getters['settings/layout']
 const install = (Vue, opts = {}) => {
   /* 全局accessToken */
   Vue.prototype.$baseAccessToken = () => {
-    return accessToken || getAccessToken()
+    return accessToken || getAccessToken('tokenTableName')
   }
   /* 全局标题 */
   Vue.prototype.$baseTitle = (() => {

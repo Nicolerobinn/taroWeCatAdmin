@@ -98,8 +98,8 @@
         nodeEnv: process.env.NODE_ENV,
         title: this.$baseTitle,
         form: {
-          username: '',
-          password: '',
+          username: 'admin',
+          password: 'admin',
         },
         rules: {
           username: [
@@ -136,10 +136,7 @@
     beforeDestroy() {
       document.body.style.overflow = 'auto'
     },
-    mounted() {
-      this.form.username = 'admin'
-      this.form.password = 'admin'
-    },
+    mounted() {},
     methods: {
       handlePassword() {
         this.passwordType === 'password'
