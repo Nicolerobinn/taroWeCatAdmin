@@ -35,10 +35,9 @@ export function convertRouter(asyncRoutes) {
  */
 function hasPermission(permissions, route) {
   if (route.meta && route.meta.permissions) {
-    return permissions.some((role) => route.meta.permissions.includes(role))
-  } else {
-    return true
+    return permissions.some((role) => route.meta.permissions === role)
   }
+  return true
 }
 
 /**

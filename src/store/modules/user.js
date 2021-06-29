@@ -54,6 +54,7 @@ const actions = {
       webRole: { menuList },
     } = user ?? {}
     if (token) {
+
       commit('setPermissions', menuList)
       commit(
         'setAvatar',
