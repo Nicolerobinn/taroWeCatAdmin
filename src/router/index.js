@@ -16,11 +16,6 @@ export const constantRoutes = [
     hidden: true,
   },
   {
-    path: '/register',
-    component: () => import('@/views/register/index'),
-    hidden: true,
-  },
-  {
     path: '/401',
     name: '401',
     component: () => import('@/views/401'),
@@ -52,97 +47,20 @@ export const asyncRoutes = [
       },
     ],
   },
-
   {
-    path: '/vab',
+    path: '/news',
     component: Layout,
     redirect: 'noRedirect',
-    name: 'Vab',
-    alwaysShow: true,
-    meta: { title: '组件', icon: 'box-open' },
+    name: 'News',
+    meta: { title: '新闻管理', icon: 'users-cog', permissions: ['admin'] },
     children: [
       {
-        path: 'permissions',
-        name: 'Permission',
-        component: () => import('@/views/vab/permissions/index'),
-        meta: {
-          title: '角色权限',
-          permissions: ['admin', 'editor'],
-        },
-      },
-      {
-        path: 'icon',
-        component: EmptyLayout,
-        redirect: 'noRedirect',
-        name: 'Icon',
-        meta: {
-          title: '图标',
-          permissions: ['admin'],
-        },
-        children: [
-          {
-            path: 'awesomeIcon',
-            name: 'AwesomeIcon',
-            component: () => import('@/views/vab/icon/index'),
-            meta: { title: '常规图标' },
-          },
-          {
-            path: 'colorfulIcon',
-            name: 'ColorfulIcon',
-            component: () => import('@/views/vab/icon/colorfulIcon'),
-            meta: { title: '多彩图标' },
-          },
-        ],
-      },
-      {
-        path: 'table',
-        component: () => import('@/views/vab/table/index'),
-        name: 'Table',
-        meta: {
-          title: '表格',
-          permissions: ['admin'],
-        },
-      },
-      {
-        path: 'form',
-        name: 'Form',
-        component: () => import('@/views/vab/form/index'),
-        meta: { title: '表单', permissions: ['admin'] },
-      },
-      {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/vab/tree/index'),
-        meta: { title: '树', permissions: ['admin'] },
-      },
-      {
-        path: 'loading',
-        name: 'Loading',
-        component: () => import('@/views/vab/loading/index'),
-        meta: { title: 'loading', permissions: ['admin'] },
-      },
-      {
-        path: 'markdownEditor',
-        name: 'MarkdownEditor',
-        component: () => import('@/views/vab/markdownEditor/index'),
-        meta: { title: 'markdown编辑器', permissions: ['admin'] },
-      },
-      {
-        path: 'editor',
-        name: 'Editor',
-        component: () => import('@/views/vab/editor/index'),
-        meta: {
-          title: '富文本编辑器',
-          permissions: ['admin'],
-          badge: 'New',
-        },
-      },
-      {
-        path: 'lodash',
-        name: 'Lodash',
-        component: () => import('@/views/vab/lodash/index'),
-        meta: { title: 'lodash', permissions: ['admin'] },
-      },
+        path: 'newPaper',
+        name: 'NewPaper',
+        component: () =>
+          import('@/views/news/newPaper/index'),
+        meta: { title: '新闻列表' },
+      }
     ],
   },
   {
@@ -165,14 +83,7 @@ export const asyncRoutes = [
         component: () =>
           import('@/views/personnelManagement/roleManagement/index'),
         meta: { title: '角色管理' },
-      },
-      {
-        path: 'menuManagement',
-        name: 'MenuManagement',
-        component: () =>
-          import('@/views/personnelManagement/menuManagement/index'),
-        meta: { title: '菜单管理', badge: 'New' },
-      },
+      }
     ],
   },
   {

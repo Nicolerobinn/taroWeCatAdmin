@@ -1,9 +1,5 @@
 FROM nginx
 
-MAINTAINER vue-admin-beautiful
-LABEL description=本项目基于vue-admin-beautiful开源版构建
-LABEL qq=783963206
-
 # 环境变量
 ENV TZ=Asia/Shanghai \
     RUN_USER=nginx \
