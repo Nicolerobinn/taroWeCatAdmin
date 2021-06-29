@@ -2,20 +2,24 @@ import { storage } from '@/config'
 
 /**
  * @author cxt （不想保留author可删除）
- * @description 获取accessToken
+ * @description 操作本地存储
  * @returns {string|ActiveX.IXMLDOMNode|Promise<any>|any|IDBRequest<any>|MediaKeyStatus|FormDataEntryValue|Function|Promise<Credential | null>}
  */
-export function getAccessToken(str) {
+export function getStorage(str) {
+  let json
   if (storage) {
     if ('localStorage' === storage) {
-      return localStorage.getItem(str)
+      json = localStorage.getItem(str)
     } else if ('sessionStorage' === storage) {
-      return sessionStorage.getItem(str)
+      json = sessionStorage.getItem(str)
     } else {
-      return localStorage.getItem(str)
+      json = localStorage.getItem(str)
     }
   } else {
-    return localStorage.getItem(str)
+    json = localStorage.getItem(str)
+  }
+  if(json){
+    return JSON.parse(json)
   }
 }
 
@@ -25,17 +29,18 @@ export function getAccessToken(str) {
  * @param accessToken
  * @returns {void|*}
  */
-export function setAccessToken(str, any) {
+export function setStorage(str, any ='') {
+  const json = JSON.stringify(any)
   if (storage) {
     if ('localStorage' === storage) {
-      return localStorage.setItem(str, any)
+      return localStorage.setItem(str, json)
     } else if ('sessionStorage' === storage) {
-      return sessionStorage.setItem(str, any)
+      return sessionStorage.setItem(str, json)
     } else {
-      return localStorage.setItem(str, any)
+      return localStorage.setItem(str, json)
     }
   } else {
-    return localStorage.setItem(str, any)
+    return localStorage.setItem(str, json)
   }
 }
 
@@ -44,7 +49,7 @@ export function setAccessToken(str, any) {
  * @description 移除accessToken
  * @returns {void|Promise<void>}
  */
-export function removeAccessToken(str) {
+export function removeStorage(str) {
   if (storage) {
     if ('localStorage' === storage) {
       return localStorage.removeItem(str)

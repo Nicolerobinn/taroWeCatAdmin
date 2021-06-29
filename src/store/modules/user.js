@@ -6,18 +6,18 @@
 import Vue from 'vue'
 import { login } from '@/api/user'
 import {
-  getAccessToken,
-  removeAccessToken,
+  getStorage,
+  removeStorage,
   setAccessToken,
 } from '@/utils/accessToken'
 import { resetRouter } from '@/router'
 import { title, tokenName, tokenTableName } from '@/config'
 
 const state = () => ({
-  accessToken: getAccessToken(tokenTableName),
+  accessToken: getStorage(tokenTableName),
   username: '',
   avatar: '',
-  permissions: getAccessToken('router-code') || [],
+  permissions: getStorage('router-code') || [],
 })
 const getters = {
   accessToken: (state) => state.accessToken,
@@ -28,7 +28,7 @@ const getters = {
 const mutations = {
   setAccessToken(state, accessToken) {
     state.accessToken = accessToken
-    setAccessToken(tokenTableName, accessToken)
+    setStorage(tokenTableName, accessToken)
   },
   setUsername(state, username) {
     state.username = username
@@ -38,7 +38,7 @@ const mutations = {
   },
   setPermissions(state, permissions) {
     const arr = permissions.map((e, i) => e.code)
-    setAccessToken('router-code', arr)
+    setStorage('router-code', arr)
     state.permissions = arr
   },
 }
@@ -88,7 +88,7 @@ const actions = {
   resetAccessToken({ commit }) {
     commit('setPermissions', [])
     commit('setAccessToken', '')
-    removeAccessToken()
+    removeStorage()
   },
 }
 export default { state, getters, mutations, actions }
