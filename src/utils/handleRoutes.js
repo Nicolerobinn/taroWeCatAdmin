@@ -58,5 +58,6 @@ export function filterAsyncRoutes(routes, permissions) {
       finallyRoutes.push(item)
     }
   })
+  console.log(finallyRoutes)
   return finallyRoutes
 }

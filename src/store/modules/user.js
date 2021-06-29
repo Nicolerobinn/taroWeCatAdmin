@@ -5,11 +5,7 @@
 
 import Vue from 'vue'
 import { login } from '@/api/user'
-import {
-  getStorage,
-  removeStorage,
-  setAccessToken,
-} from '@/utils/accessToken'
+import { getStorage, removeStorage, setStorage } from '@/utils/accessToken'
 import { resetRouter } from '@/router'
 import { title, tokenName, tokenTableName } from '@/config'
 
@@ -39,6 +35,7 @@ const mutations = {
   setPermissions(state, permissions) {
     const arr = permissions.map((e, i) => e.code)
     setStorage('router-code', arr)
+    console.log(arr)
     state.permissions = arr
   },
 }
@@ -49,12 +46,12 @@ const actions = {
   async login({ commit }, userInfo) {
     const { data } = await login(userInfo)
     const { token, user } = data ?? {}
+    console.log(token)
     const {
       nickname,
       webRole: { menuList },
     } = user ?? {}
     if (token) {
-
       commit('setPermissions', menuList)
       commit(
         'setAvatar',

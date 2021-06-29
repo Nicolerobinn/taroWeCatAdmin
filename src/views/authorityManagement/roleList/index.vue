@@ -6,15 +6,12 @@
  * @LastEditTime: 2021-06-29 10:41:59
 -->
 <template>
-
+  <div></div>
 </template>
-
 <script>
-export default {
-    name: 'NewsPaper',
-}
+  export default {
+    name: 'RoletList',
+  }
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

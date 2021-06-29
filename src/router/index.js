@@ -27,9 +27,6 @@ export const constantRoutes = [
     component: () => import('@/views/404'),
     hidden: true,
   },
-]
-
-export const asyncRoutes = [
   {
     path: '/',
     component: Layout,
@@ -48,42 +45,72 @@ export const asyncRoutes = [
     ],
   },
   {
-    path: '/news',
+    path: '/',
     component: Layout,
-    redirect: 'noRedirect',
-    name: 'News',
-    meta: { title: '新闻管理', icon: 'users-cog', permissions: ['admin'] },
+    redirect: 'index',
     children: [
       {
-        path: 'newPaper',
-        name: 'NewPaper',
-        component: () =>
-          import('@/views/news/newPaper/index'),
-        meta: { title: '新闻列表' },
-      }
+        path: 'index',
+        name: 'Index',
+        component: () => import('@/views/index/index'),
+        meta: {
+          title: '首页',
+          icon: 'home',
+          affix: true,
+        },
+      },
     ],
   },
   {
-    path: '/personnelManagement',
+    path: '/paperManagement',
     component: Layout,
     redirect: 'noRedirect',
-    name: 'PersonnelManagement',
-    meta: { title: '用户管理', icon: 'users-cog', permissions: ['admin'] },
+    name: 'PaperManagement',
+    meta: { title: '新闻管理', icon: 'users-cog', permissions: '01' },
     children: [
       {
-        path: 'userManagement',
-        name: 'UserManagement',
+        path: 'paperList',
+        name: 'PaperList',
+        component: () => import('@/views/paperManagement/paperList/index'),
+        meta: { title: '新闻列表', permissions: '0101' },
+      },
+    ],
+  },
+  {
+    path: '/userManagement',
+    component: Layout,
+    redirect: 'noRedirect',
+    name: 'UserManagement',
+    meta: { title: '用户管理', icon: 'users-cog', permissions: '02' },
+    children: [
+      {
+        path: 'userList',
+        name: 'UserList',
+        component: () => import('@/views/userManagement/userList/index'),
+        meta: { title: '用户列表', permissions: '0201' },
+      },
+    ],
+  },
+  {
+    path: '/authorityManagement',
+    component: Layout,
+    redirect: 'noRedirect',
+    name: 'AuthorityManagement',
+    meta: { title: '权限管理', icon: 'users-cog', permissions: '03' },
+    children: [
+      {
+        path: 'accountList',
+        name: 'AccountList',
         component: () =>
-          import('@/views/personnelManagement/userManagement/index'),
-        meta: { title: '用户列表' },
+          import('@/views/authorityManagement/accountList/index'),
+        meta: { title: '账号列表', permissions: '0302' },
       },
       {
-        path: 'roleManagement',
-        name: 'RoleManagement',
-        component: () =>
-          import('@/views/personnelManagement/roleManagement/index'),
-        meta: { title: '角色管理' },
-      }
+        path: 'roleList',
+        name: 'RoleList',
+        component: () => import('@/views/authorityManagement/roleList/index'),
+        meta: { title: '角色列表', permissions: '0301' },
+      },
     ],
   },
   {
@@ -92,6 +119,8 @@ export const asyncRoutes = [
     hidden: true,
   },
 ]
+
+export const asyncRoutes = []
 
 const router = new VueRouter({
   base: publicPath,

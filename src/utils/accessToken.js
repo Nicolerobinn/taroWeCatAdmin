@@ -18,8 +18,12 @@ export function getStorage(str) {
   } else {
     json = localStorage.getItem(str)
   }
-  if(json){
-    return JSON.parse(json)
+  if (json) {
+    try {
+      return JSON.parse(json)
+    } catch (error) {
+      return json
+    }
   }
 }
 
@@ -29,7 +33,7 @@ export function getStorage(str) {
  * @param accessToken
  * @returns {void|*}
  */
-export function setStorage(str, any ='') {
+export function setStorage(str, any = '') {
   const json = JSON.stringify(any)
   if (storage) {
     if ('localStorage' === storage) {

@@ -5,8 +5,6 @@ import router from './router'
 import './plugins'
 import '@/layouts/export'
 
-
-
 /**
  * @author cxt （不想保留author可删除）
  * @description vue自定义指令检查权限
@@ -15,11 +13,11 @@ import '@/layouts/export'
  */
 Vue.directive('permission', {
   inserted(el, binding) {
-    const {value} = binding
+    const { value } = binding
     const roles = store.getters['user/permissions']
     if (value && value instanceof Array && value.length > 0) {
       const permissionRoles = value
-      const hasPermission = roles.some(role =>permissionRoles.includes(role))
+      const hasPermission = roles.some((role) => permissionRoles.includes(role))
       if (!hasPermission) {
         el.parentNode && el.parentNode.removeChild(el)
       }
@@ -27,7 +25,6 @@ Vue.directive('permission', {
       throw new Error('没有输入权限，默认全部开放')
     }
   },
-
 })
 
 /**
