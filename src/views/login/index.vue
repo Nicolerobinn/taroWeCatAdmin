@@ -128,7 +128,6 @@
       },
     },
     created() {
-      console.log(123)
       document.body.style.overflow = 'hidden'
     },
     beforeDestroy() {

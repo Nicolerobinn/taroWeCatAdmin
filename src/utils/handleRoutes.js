@@ -33,9 +33,9 @@ export function convertRouter(asyncRoutes) {
  * @param route
  * @returns {boolean|*}
  */
-function hasPermission(permissions, route) {
-  if (route.meta && route.meta.permissions) {
-    return permissions.some((role) => route.meta.permissions === role)
+function hasPermission(permissions, { meta = {} }) {
+  if (meta?.permissions) {
+    return permissions.indexOf(meta.permissions) !== -1
   }
   return true
 }
@@ -48,6 +48,9 @@ function hasPermission(permissions, route) {
  * @returns {[]}
  */
 export function filterAsyncRoutes(routes, permissions) {
+  if (routes.length === 0) {
+    return []
+  }
   const finallyRoutes = []
   routes.forEach((route) => {
     const item = { ...route }
@@ -58,6 +61,5 @@ export function filterAsyncRoutes(routes, permissions) {
       finallyRoutes.push(item)
     }
   })
-  console.log(finallyRoutes)
   return finallyRoutes
 }

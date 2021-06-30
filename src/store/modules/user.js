@@ -4,6 +4,7 @@
  */
 
 import Vue from 'vue'
+import router from '@/router'
 import { login } from '@/api/user'
 import { getStorage, removeStorage, setStorage } from '@/utils/accessToken'
 import { resetRouter } from '@/router'
@@ -13,7 +14,7 @@ const state = () => ({
   accessToken: getStorage(tokenTableName),
   username: '',
   avatar: '',
-  permissions: getStorage('router-code') || [],
+  permissions: [],
 })
 const getters = {
   accessToken: (state) => state.accessToken,
@@ -32,27 +33,29 @@ const mutations = {
   setAvatar(state, avatar) {
     state.avatar = avatar
   },
-  setPermissions(state, permissions) {
-    const arr = permissions.map((e, i) => e.code)
+  async setPermissions(state, arr) {
     setStorage('router-code', arr)
-    console.log(arr)
     state.permissions = arr
   },
 }
 const actions = {
-  setPermissions({ commit }, permissions) {
-    commit('setPermissions', permissions)
+  async setPermissions({ commit, dispatch }, arr) {
+    const accessRoutes = await dispatch('routes/setRoutes', arr, {
+      root: true,
+    })
+    await router.addRoutes(accessRoutes)
+    commit('setPermissions', arr)
   },
-  async login({ commit }, userInfo) {
+  async login({ commit, dispatch }, userInfo) {
     const { data } = await login(userInfo)
     const { token, user } = data ?? {}
-    console.log(token)
     const {
       nickname,
       webRole: { menuList },
     } = user ?? {}
     if (token) {
-      commit('setPermissions', menuList)
+      const arr = menuList.map((e) => e.code)
+      await dispatch('setPermissions', arr)
       commit(
         'setAvatar',
         'https://i.gtimg.cn/club/item/face/img/2/15922_100.gif'
