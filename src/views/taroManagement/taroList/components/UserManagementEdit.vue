@@ -6,8 +6,24 @@
     @close="close"
   >
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-      <el-form-item label="权限码" prop="permission">
-        <el-input v-model="form.permission" autocomplete="off"></el-input>
+      <el-form-item label="用户名" prop="username">
+        <el-input v-model.trim="form.username" autocomplete="off"></el-input>
+      </el-form-item>
+      <el-form-item label="密码" prop="password">
+        <el-input
+          v-model.trim="form.password"
+          type="password"
+          autocomplete="off"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="邮箱" prop="email">
+        <el-input v-model.trim="form.email" autocomplete="off"></el-input>
+      </el-form-item>
+      <el-form-item label="权限" prop="permissions">
+        <el-checkbox-group v-model="form.permissions">
+          <el-checkbox label="admin"></el-checkbox>
+          <el-checkbox label="editor"></el-checkbox>
+        </el-checkbox-group>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -18,18 +34,28 @@
 </template>
 
 <script>
-  import { doEdit } from '@/api/roleManagement'
+  import { doEdit } from '@/api/userManagement'
 
   export default {
-    name: 'RoleManagementEdit',
+    name: 'UserManagementEdit',
     data() {
       return {
         form: {
-          id: '',
+          username: '',
+          password: '',
+          email: '',
+          permissions: [],
         },
         rules: {
-          permission: [
-            { required: true, trigger: 'blur', message: '请输入权限码' },
+          username: [
+            { required: true, trigger: 'blur', message: '请输入用户名' },
+          ],
+          password: [
+            { required: true, trigger: 'blur', message: '请输入密码' },
+          ],
+          email: [{ required: true, trigger: 'blur', message: '请输入邮箱' }],
+          permissions: [
+            { required: true, trigger: 'blur', message: '请选择权限' },
           ],
         },
         title: '',

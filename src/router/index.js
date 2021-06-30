@@ -60,6 +60,19 @@ export const asyncRoutes = [
         component: () => import('@/views/paperManagement/paperList/index'),
         meta: { title: '新闻列表', permissions: '0101' },
       },
+      {
+        path: 'addPaper',
+        name: 'AddPaper',
+        component: () => import('@/views/paperManagement/addPaper/index'),
+        meta: { title: '新增新闻', permissions: '010102' },
+      },
+      {
+        path: 'editorPaper/:id',
+        name: 'EditorPaper',
+        component: () => import('@/views/paperManagement/editorPaper/index'),
+        meta: { title: '编辑新闻', permissions: '010103' },
+        hidden: true,
+      },
     ],
   },
   {
@@ -78,19 +91,27 @@ export const asyncRoutes = [
     ],
   },
   {
+    path: '/taroManagement',
+    component: Layout,
+    redirect: 'noRedirect',
+    name: 'TaroManagement',
+    meta: { title: '小程序用户管理', icon: 'users-cog', permissions: '08' },
+    children: [
+      {
+        path: 'taroList',
+        name: 'TaroList',
+        component: () => import('@/views/taroManagement/taroList/index'),
+        meta: { title: '小程序用户列表', permissions: '0801' },
+      },
+    ],
+  },
+  {
     path: '/authorityManagement',
     component: Layout,
     redirect: 'noRedirect',
     name: 'AuthorityManagement',
     meta: { title: '权限管理', icon: 'users-cog', permissions: '03' },
     children: [
-      {
-        path: 'accountList',
-        name: 'AccountList',
-        component: () =>
-          import('@/views/authorityManagement/accountList/index'),
-        meta: { title: '账号列表', permissions: '0302' },
-      },
       {
         path: 'roleList',
         name: 'RoleList',

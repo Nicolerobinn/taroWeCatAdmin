@@ -1,25 +1,25 @@
 <template>
-  <div class="roleManagement-container">
-    <el-divider content-position="left">
-      演示环境仅做基础功能展示，若想实现不同角色的真实菜单配置，需将settings.js路由加载模式改为all模式，由后端全面接管路由渲染与权限控制
-    </el-divider>
+  <div class="userManagement-container">
     <vab-query-form>
       <vab-query-form-left-panel :span="12">
         <el-button icon="el-icon-plus" type="primary" @click="handleEdit">
           添加
-        </el-button>
-        <el-button icon="el-icon-delete" type="danger" @click="handleDelete">
-          批量删除
         </el-button>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel :span="12">
         <el-form :inline="true" :model="queryForm" @submit.native.prevent>
           <el-form-item>
             <el-input
-              v-model.trim="queryForm.permission"
-              placeholder="请输入查询条件"
+              v-model.trim="queryForm.searchInput"
+              placeholder="请输入用户名"
               clearable
             />
+          </el-form-item>
+          <el-form-item label="性别" prop="region">
+            <el-select v-model="ruleForm.region" placeholder="请选择性别">
+              <el-option label="男" value="1"></el-option>
+              <el-option label="女" value="0"></el-option>
+            </el-select>
           </el-form-item>
           <el-form-item>
             <el-button icon="el-icon-search" type="primary" @click="queryData">
@@ -44,8 +44,27 @@
       ></el-table-column>
       <el-table-column
         show-overflow-tooltip
-        prop="permission"
-        label="权限码"
+        prop="searchInput"
+        label="用户名"
+      ></el-table-column>
+      <el-table-column
+        show-overflow-tooltip
+        prop="email"
+        label="邮箱"
+      ></el-table-column>
+
+      <el-table-column show-overflow-tooltip label="权限">
+        <template #default="{ row }">
+          <el-tag v-for="(item, index) in row.permissions" :key="index">
+            {{ item }}
+          </el-tag>
+        </template>
+      </el-table-column>
+
+      <el-table-column
+        show-overflow-tooltip
+        prop="datatime"
+        label="修改时间"
       ></el-table-column>
       <el-table-column show-overflow-tooltip label="操作" width="200">
         <template #default="{ row }">
@@ -56,7 +75,7 @@
     </el-table>
     <el-pagination
       background
-      :current-page="queryForm.pageNo"
+      :current-page="queryForm.pageNum"
       :page-size="queryForm.pageSize"
       :layout="layout"
       :total="total"
@@ -68,24 +87,24 @@
 </template>
 
 <script>
-  import { getList, doDelete } from '@/api/roleManagement'
-  import Edit from './components/RoleManagementEdit'
+  import { getUserList } from '@/api/userList'
+  import Edit from './components/UserManagementEdit'
 
   export default {
-    name: 'RoleManagement',
+    name: 'TaroUserList',
     components: { Edit },
     data() {
       return {
-        list: null,
+        list: [],
         listLoading: true,
         layout: 'total, sizes, prev, pager, next, jumper',
         total: 0,
         selectRows: '',
         elementLoadingText: '正在加载...',
         queryForm: {
-          pageNo: 1,
+          pageNum: 1,
           pageSize: 10,
-          permission: '',
+          searchInput: '',
         },
       }
     },
@@ -129,18 +148,19 @@
         this.fetchData()
       },
       handleCurrentChange(val) {
-        this.queryForm.pageNo = val
+        this.queryForm.pageNum = val
         this.fetchData()
       },
       queryData() {
-        this.queryForm.pageNo = 1
+        this.queryForm.pageNum = 1
         this.fetchData()
       },
       async fetchData() {
         this.listLoading = true
-        const { data, totalCount } = await getList(this.queryForm)
-        this.list = data
-        this.total = totalCount
+        const { data } = await getUserList(this.queryForm)
+        const { total, list } = data ?? {}
+        this.list = list
+        this.total = total
         setTimeout(() => {
           this.listLoading = false
         }, 300)
