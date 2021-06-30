@@ -1,5 +1,13 @@
 <template>
   <div class="userManagement-container">
+    <vab-query-form>
+      <vab-query-form-left-panel :span="12">
+        <el-button icon="el-icon-plus" type="primary" @click="handleEdit">
+          新增用户
+        </el-button>
+      </vab-query-form-left-panel>
+    </vab-query-form>
+
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -15,12 +23,6 @@
         prop="nickname"
         label="用户名"
       ></el-table-column>
-      <el-table-column
-        show-overflow-tooltip
-        prop="email"
-        label="邮箱"
-      ></el-table-column>
-
       <el-table-column show-overflow-tooltip label="权限">
         <template #default="{ row }">
           <el-tag v-for="(item, index) in row.permissions" :key="index">
@@ -55,7 +57,7 @@
 </template>
 
 <script>
-  import { getList, deleteUser } from '@/api/roleList'
+  import { getList, deleteUser, addUser } from '@/api/roleList'
   import Edit from './components/UserManagementEdit'
 
   export default {

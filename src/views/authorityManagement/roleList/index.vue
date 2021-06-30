@@ -1,5 +1,12 @@
 <template>
   <div class="userManagement-container">
+    <vab-query-form>
+      <vab-query-form-left-panel :span="12">
+        <el-button icon="el-icon-plus" type="primary" @click="handleEdit">
+          新增角色
+        </el-button>
+      </vab-query-form-left-panel>
+    </vab-query-form>
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -12,30 +19,18 @@
       ></el-table-column>
       <el-table-column
         show-overflow-tooltip
-        prop="nickname"
-        label="用户名"
+        prop="roleName"
+        label="角色名称"
       ></el-table-column>
-      <el-table-column
-        show-overflow-tooltip
-        prop="email"
-        label="邮箱"
-      ></el-table-column>
-
-      <el-table-column show-overflow-tooltip label="权限">
-        <template #default="{ row }">
-          <el-tag v-for="(item, index) in row.permissions" :key="index">
-            {{ item }}
-          </el-tag>
-        </template>
-      </el-table-column>
 
       <el-table-column
         show-overflow-tooltip
-        prop="updateTime"
-        label="修改时间"
+        prop="createTime"
+        label="创建时间"
       ></el-table-column>
       <el-table-column show-overflow-tooltip label="操作" width="200">
         <template #default="{ row }">
+          <el-button type="text" @click="showDetail(row)">详情</el-button>
           <el-button type="text" @click="handleEdit(row)">编辑</el-button>
           <el-button type="text" @click="handleDelete(row)">删除</el-button>
         </template>
@@ -51,16 +46,18 @@
       @current-change="handleCurrentChange"
     ></el-pagination>
     <edit ref="edit" @fetch-data="fetchData"></edit>
+    <detail ref="detail"></detail>
   </div>
 </template>
 
 <script>
   import { getList, deleteUser } from '@/api/roleList'
-  import Edit from './components/UserManagementEdit'
+  import Detail from './components/UserDetail'
+  import Edit from './components/RoleEdit'
 
   export default {
     name: 'RoleList',
-    components: { Edit },
+    components: { Edit, Detail },
     data() {
       return {
         list: [],
@@ -78,6 +75,9 @@
       this.fetchData()
     },
     methods: {
+      showDetail({ id }) {
+        this.$refs['detail'].show(id)
+      },
       handleEdit(row) {
         if (row.id) {
           this.$refs['edit'].showEdit(row)
@@ -87,7 +87,7 @@
       },
       handleDelete(row) {
         this.$baseConfirm('你确定要删除当前项吗', null, async () => {
-          const { msg } = await deleteUser({ ids: row.id })
+          const { msg } = await deleteUser(row.id)
           this.$baseMessage(msg, 'success')
           this.fetchData()
         })

@@ -1,13 +1,12 @@
 import request from '@/utils/request'
-import { encryptedData } from '@/utils/encrypt'
-import { loginRSA, tokenName } from '@/config'
+import { MD } from '@/utils/md5'
+import { loginMD } from '@/config'
 
 export async function login(data) {
   const { username, password } = data || {}
   let word = password
-  if (loginRSA) {
-    const res = await encryptedData(password)
-    word = res.param
+  if (loginMD) {
+    word = await MD(password)
   }
   return request({
     url: 'web/webUser/login',

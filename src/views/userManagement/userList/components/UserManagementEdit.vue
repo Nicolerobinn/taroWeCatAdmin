@@ -6,8 +6,8 @@
     @close="close"
   >
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-      <el-form-item label="用户名" prop="username">
-        <el-input v-model.trim="form.username" autocomplete="off"></el-input>
+      <el-form-item label="用户名" prop="userName">
+        <el-input v-model.trim="form.userName" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="密码" prop="password">
         <el-input
@@ -16,14 +16,17 @@
           autocomplete="off"
         ></el-input>
       </el-form-item>
-      <el-form-item label="邮箱" prop="email">
-        <el-input v-model.trim="form.email" autocomplete="off"></el-input>
-      </el-form-item>
-      <el-form-item label="权限" prop="permissions">
-        <el-checkbox-group v-model="form.permissions">
-          <el-checkbox label="admin"></el-checkbox>
-          <el-checkbox label="editor"></el-checkbox>
-        </el-checkbox-group>
+      <!-- <el-form-item label="昵称" prop="nickname">
+        <el-input v-model.trim="form.nickname" autocomplete="off"></el-input>
+      </el-form-item> -->
+      <el-form-item label="权限" prop="roleId">
+        <el-radio-group v-model="form.roleId">
+          <template v-for="(a, i) in permissions">
+            <el-radio :key="i" :label="a.id">
+              {{ a.roleName }}
+            </el-radio>
+          </template>
+        </el-radio-group>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -34,37 +37,42 @@
 </template>
 
 <script>
-  import { doEdit } from '@/api/userManagement'
-
+  import { getAllRole, addUser, editUser } from '@/api/webUserList'
+  import { MD } from '@/utils/md5'
   export default {
     name: 'UserManagementEdit',
     data() {
       return {
         form: {
-          username: '',
+          userName: '',
           password: '',
-          email: '',
-          permissions: [],
+          nickname: '',
+          roleId: '',
         },
+        permissions: [],
         rules: {
-          username: [
+          userName: [
             { required: true, trigger: 'blur', message: '请输入用户名' },
           ],
           password: [
             { required: true, trigger: 'blur', message: '请输入密码' },
           ],
-          email: [{ required: true, trigger: 'blur', message: '请输入邮箱' }],
-          permissions: [
-            { required: true, trigger: 'blur', message: '请选择权限' },
-          ],
+          // nickname: [
+          //   { required: true, trigger: 'blur', message: '请输入昵称' },
+          // ],
+          roleId: [{ required: true, trigger: 'blur', message: '请选择权限' }],
         },
         title: '',
         dialogFormVisible: false,
       }
     },
-    created() {},
+    async created() {
+      const res = await getAllRole()
+      this.permissions = res.data
+    },
     methods: {
       showEdit(row) {
+        console.log(row)
         if (!row) {
           this.title = '添加'
         } else {
@@ -81,7 +89,15 @@
       save() {
         this.$refs['form'].validate(async (valid) => {
           if (valid) {
-            const { msg } = await doEdit(this.form)
+            const obj = { ...this.form }
+            obj.password = await MD(obj.password)
+            let data
+            if (this.title === '添加') {
+              data = await addUser(obj)
+            } else {
+              data = await editUser(obj)
+            }
+            const { msg } = data
             this.$baseMessage(msg, 'success')
             this.$emit('fetch-data')
             this.close()

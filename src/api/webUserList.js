@@ -22,7 +22,7 @@ export async function editUser(data) {
 export async function addUser(data) {
   return request({
     url: 'web/webUser/saveUser',
-    method: 'POST',
+    method: 'post',
     data,
   })
 }

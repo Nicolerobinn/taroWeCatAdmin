@@ -8,6 +8,13 @@ export async function getList({ pageSize, pageNum }) {
   })
 }
 
+export async function userDetail(id) {
+  return request({
+    url: `web/Permission/getRole/${id}`,
+    method: 'get',
+  })
+}
+
 export async function deleteUser(id) {
   return request({
     url: `web/webUser/deleteUser/${id}`,
@@ -16,21 +23,21 @@ export async function deleteUser(id) {
 }
 export async function editUser(data) {
   return request({
-    url: 'web/webUser/saveUser',
+    url: 'web/Permission/updateRole',
     method: 'put',
     data,
   })
 }
 export async function addUser(data) {
   return request({
-    url: 'web/webUser/saveUser',
-    method: 'POST',
+    url: 'web/Permission/saveRole',
+    method: 'post',
     data,
   })
 }
-export async function getAllRole() {
+export async function getTree() {
   return request({
-    url: 'web/webUser/roleList',
+    url: 'web/Permission/getMenuTree',
     method: 'get',
   })
 }

@@ -65,6 +65,7 @@ export const asyncRoutes = [
         name: 'AddPaper',
         component: () => import('@/views/paperManagement/addPaper/index'),
         meta: { title: '新增新闻', permissions: '010102' },
+        hidden: true,
       },
       {
         path: 'editorPaper/:id',
