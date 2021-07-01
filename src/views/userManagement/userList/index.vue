@@ -57,7 +57,7 @@
 </template>
 
 <script>
-  import { getList, deleteUser, addUser } from '@/api/roleList'
+  import { getList, deleteUser, addUser } from '@/api/webUserList'
   import Edit from './components/UserManagementEdit'
 
   export default {
@@ -89,7 +89,7 @@
       },
       handleDelete(row) {
         this.$baseConfirm('你确定要删除当前项吗', null, async () => {
-          const { msg } = await deleteUser({ ids: row.id })
+          const { msg } = await deleteUser(row.id)
           this.$baseMessage(msg, 'success')
           this.fetchData()
         })

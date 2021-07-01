@@ -129,8 +129,8 @@
       this.fetchData()
     },
     methods: {
-      show(row){
-          this.$refs['detail'].show(row)
+      show(row) {
+        this.$refs['detail'].show(row)
       },
       add() {
         this.$router.push('AddPaper')

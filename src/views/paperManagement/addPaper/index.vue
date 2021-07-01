@@ -1,15 +1,34 @@
 <template>
   <div class="editor-container">
     <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-      <el-form-item label="标题" prop="title">
+      <el-form-item label="新闻标题" prop="title">
         <el-input v-model="form.title" maxlength="20"></el-input>
       </el-form-item>
-      <el-form-item label="所属模块" prop="module">
-        <el-select v-model="form.module">
-          <el-option label="新闻动态" value="1"></el-option>
-          <el-option label="实时热点" value="2"></el-option>
+      <el-form-item label="摘要" prop="remark">
+        <el-input v-model="form.remark"></el-input>
+      </el-form-item>
+      <el-form-item label="作者" style="width: 400px" prop="author">
+        <el-input v-model="form.author" maxlength="20"></el-input>
+      </el-form-item>
+      <el-form-item label="所属频道" prop="channel">
+        <el-select v-model="form.channel">
+          <template v-for="(a, i) in channelList">
+            <el-option
+              :key="i"
+              :label="a.channel_name"
+              :value="a.id"
+            ></el-option>
+          </template>
         </el-select>
       </el-form-item>
+      <el-form-item
+        label="小程序新闻列表图片地址(逗号隔开)"
+        style="width: 800px"
+        prop="imgPaths"
+      >
+        <el-input v-model="form.imgPaths" type="textarea" :rows="4"></el-input>
+      </el-form-item>
+
       <el-form-item label="内容" prop="content" class="vab-quill-content">
         <vab-quill
           v-model="form.content"
@@ -32,6 +51,7 @@
 </template>
 
 <script>
+  import { addPaper, getChannel } from '@/api/paperList'
   import vabQuill from '@/plugins/vabQuill'
   export default {
     name: 'AddPaper',
@@ -62,13 +82,16 @@
           placeholder: '内容...',
           readOnly: false,
         },
-        borderColor: '#dcdfe6',
         dialogTableVisible: false,
         form: {
           title: '',
-          module: '',
+          remark: '',
+          channel: '',
           content: '',
+          author: '',
+          imgPaths: '',
         },
+        channelList: [],
         rules: {
           title: [
             {
@@ -77,11 +100,11 @@
               trigger: 'blur',
             },
           ],
-          module: [
+          remark: [
             {
               required: true,
-              message: '请选择模块',
-              trigger: 'change',
+              message: '请输入摘要',
+              trigger: 'blur',
             },
           ],
           content: [
@@ -91,8 +114,26 @@
               trigger: 'blur',
             },
           ],
+          imgPaths: [
+            {
+              required: true,
+              message: '请输入图片地址',
+              trigger: 'blur',
+            },
+          ],
+          channel: [
+            {
+              required: true,
+              message: '请选择频道',
+              trigger: 'blur',
+            },
+          ],
         },
       }
+    },
+    async mounted() {
+      const res = await getChannel()
+      this.channelList = res.data ?? []
     },
     methods: {
       handleSee() {
@@ -106,14 +147,15 @@
         })
       },
       handleSave() {
-        this.$refs['form'].validate((valid) => {
+        this.$refs['form'].validate(async (valid) => {
           this.$refs.form.validateField('content', (errorMsg) => {
-            this.borderColor = '#dcdfe6'
             if (errorMsg) {
-              this.borderColor = '#F56C6C'
             }
           })
           if (valid) {
+            const obj = { ...this.form }
+            const res = await addPaper(obj)
+            console.log(res)
             this.$baseMessage('submit!', 'success')
           } else {
             return false
