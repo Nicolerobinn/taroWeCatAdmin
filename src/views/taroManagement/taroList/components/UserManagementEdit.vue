@@ -34,7 +34,7 @@
 </template>
 
 <script>
-  import { doEdit } from '@/api/userManagement'
+  import {} from '@/api/userList'
 
   export default {
     name: 'UserManagementEdit',

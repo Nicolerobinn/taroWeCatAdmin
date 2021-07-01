@@ -14,12 +14,12 @@
         >
           <div class="title">hello !</div>
           <div class="title-tips">欢迎来到{{ title }}！</div>
-          <el-form-item style="margin-top: 40px" prop="username">
+          <el-form-item style="margin-top: 40px" prop="userName">
             <span class="svg-container svg-container-admin">
               <vab-icon :icon="['fas', 'user']" />
             </span>
             <el-input
-              v-model.trim="form.username"
+              v-model.trim="form.userName"
               v-focus
               placeholder="请输入用户名"
               tabindex="1"
@@ -95,11 +95,11 @@
         nodeEnv: process.env.NODE_ENV,
         title: this.$baseTitle,
         form: {
-          username: 'admin',
+          userName: 'admin',
           password: 'admin',
         },
         rules: {
-          username: [
+          userName: [
             {
               required: true,
               trigger: 'blur',

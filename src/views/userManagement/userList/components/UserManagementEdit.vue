@@ -72,7 +72,6 @@
     },
     methods: {
       showEdit(row) {
-        console.log(row)
         if (!row) {
           this.title = '添加'
         } else {

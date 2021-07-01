@@ -14,8 +14,8 @@ const setting = {
   transpileDependencies: [],
   baseURL:
     process.env.NODE_ENV === 'development'
-      ? 'http://abuc80tviv.cqhttp.cn'
-      : 'http://abuc80tviv.cqhttp.cn',
+      ? 'http://53xg1cpzyz.cqhttp.cn'
+      : 'http://53xg1cpzyz.cqhttp.cn',
   //标题 （包括初次加载雪花屏的标题 页面的标题 浏览器的标题）
   title: 'news-admin',
   //简写
@@ -40,7 +40,7 @@ const setting = {
   //token名称
   tokenName: 'token',
   //token在localStorage、sessionStorage存储的key的名称
-  tokenTableName: 'news-admin',
+  tokenTableName: 'token',
   //token存储位置localStorage sessionStorage
   storage: 'localStorage',
   //token失效回退到登录页时是否记录本次的路由

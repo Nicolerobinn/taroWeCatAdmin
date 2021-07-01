@@ -15,7 +15,7 @@
           ref="treeOption"
           :data="data"
           show-checkbox
-          node-key="code"
+          node-key="id"
           :props="defaultProps"
           @check="checkNode"
         ></el-tree>
@@ -69,7 +69,7 @@
         const checkedNodes = this.$refs.treeOption.getCheckedNodes()
         const keyArr = []
         checkedNodes.forEach((item) => {
-          keyArr.push(item.code)
+          keyArr.push(item.id)
         })
         this.form.menuList = keyArr
       },
@@ -93,7 +93,7 @@
           const { id, roleName } = row
           const res = await userDetail(id)
           const { menuList } = res.data
-          const arr = menuList.map((e) => e.code)
+          const arr = menuList.map((e) => e.id)
           this.form = { id, roleName, menuList: arr }
           setTimeout(() => {
             this.initTree(arr)
@@ -109,15 +109,21 @@
       save() {
         this.$refs['form'].validate(async (valid) => {
           if (valid) {
+            const obj = { ...this.form }
+            obj.menuList = obj.menuList.map((e) => {
+              return { id: e }
+            })
             let res
             if (this.title === '编辑') {
-              res = await editUser(this.form)
+              res = await editUser(obj)
             } else {
-              res = await addUser(this.form)
+              res = await addUser(obj)
             }
-            this.$baseMessage(msg, 'success')
-            this.$emit('fetch-data')
-            this.close()
+            if (res.code === 1) {
+              this.$baseMessage(`${this.title}成功`, 'success')
+              this.$emit('fetch-data')
+              this.close()
+            }
           } else {
             return false
           }
