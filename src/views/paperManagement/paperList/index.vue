@@ -85,6 +85,7 @@
       ></el-table-column>
       <el-table-column show-overflow-tooltip label="操作" width="200">
         <template #default="{ row }">
+          <el-button type="text" @click="show(row)">查看</el-button>
           <el-button type="text" @click="handleEdit(row)">编辑</el-button>
           <el-button type="text" @click="handleDelete(row)">删除</el-button>
         </template>
@@ -99,14 +100,17 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     ></el-pagination>
+    <PaperDetail ref="detail" />
   </div>
 </template>
 
 <script>
+  import PaperDetail from './components/PaperDetail'
   import { getList, deletePaper } from '@/api/paperList'
 
   export default {
     name: 'PaperList',
+    components: { PaperDetail },
     data() {
       return {
         list: [],
@@ -125,6 +129,9 @@
       this.fetchData()
     },
     methods: {
+      show(row){
+          this.$refs['detail'].show(row)
+      },
       add() {
         this.$router.push('AddPaper')
       },
