@@ -16,7 +16,7 @@ export async function userDetail(id) {
 
 export async function deleteUser(id) {
   return request({
-    url: `web/webUser/deleteRole/${id}`,
+    url: `web/Permission/deleteRole/${id}`,
     method: 'delete',
   })
 }

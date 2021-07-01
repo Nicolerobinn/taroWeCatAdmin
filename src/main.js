@@ -15,7 +15,7 @@ Vue.directive('permission', {
   inserted(el, binding) {
     const { value } = binding
     const roles = store.getters['user/permissions']
-    if (value && value instanceof String) {
+    if (value && typeof value === 'string') {
       if (roles.indexOf(value) === -1) {
         el.parentNode && el.parentNode.removeChild(el)
       }

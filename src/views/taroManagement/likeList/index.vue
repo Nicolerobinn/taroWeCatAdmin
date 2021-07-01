@@ -8,15 +8,15 @@
         <el-form :inline="true" :model="queryForm" @submit.native.prevent>
           <el-form-item>
             <el-input
-              v-model.trim="queryForm.searchInput"
-              placeholder="请输入用户名"
+              v-model.trim="queryForm.userId"
+              placeholder="小程序用户id"
               clearable
             />
           </el-form-item>
-          <el-form-item label="性别" prop="gender">
-            <el-select v-model="queryForm.gender" placeholder="请选择性别">
-              <el-option label="男" value="1"></el-option>
-              <el-option label="女" value="0"></el-option>
+          <el-form-item label="性别" prop="type">
+            <el-select v-model="queryForm.type" placeholder="点赞或转发">
+              <el-option label="转发" value="1"></el-option>
+              <el-option label="点赞" value="0"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item>
@@ -35,43 +35,18 @@
     >
       <el-table-column
         show-overflow-tooltip
-        prop="nickName"
-        label="昵称"
+        prop="id"
+        label="id"
       ></el-table-column>
       <el-table-column
         show-overflow-tooltip
-        prop="phone"
-        label="电话"
+        prop="title"
+        label="标题"
       ></el-table-column>
       <el-table-column
         show-overflow-tooltip
-        prop="gender"
-        label="性别"
-      ></el-table-column>
-      <el-table-column
-        show-overflow-tooltip
-        prop="avatarUrl"
-        label="头像"
-      ></el-table-column>
-      <el-table-column
-        show-overflow-tooltip
-        prop="country"
-        label="国家"
-      ></el-table-column>
-      <el-table-column
-        show-overflow-tooltip
-        prop="province"
-        label="省"
-      ></el-table-column>
-      <el-table-column
-        show-overflow-tooltip
-        prop="city"
-        label="市"
-      ></el-table-column>
-      <el-table-column
-        show-overflow-tooltip
-        prop="openId"
-        label="openId"
+        prop="channelName"
+        label="所属模块"
       ></el-table-column>
       <el-table-column
         show-overflow-tooltip
@@ -88,17 +63,14 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     ></el-pagination>
-    <edit ref="edit" @fetch-data="fetchData"></edit>
   </div>
 </template>
 
 <script>
-  import { getUserList } from '@/api/userList'
-  import Edit from './components/UserManagementEdit'
+  import { getTagNews } from '@/api/userList'
 
   export default {
-    name: 'TaroList',
-    components: { Edit },
+    name: 'LikeList',
     data() {
       return {
         list: [],
@@ -110,7 +82,7 @@
         queryForm: {
           pageNum: 1,
           pageSize: 10,
-          searchInput: '',
+          userId: '',
         },
       }
     },
@@ -132,7 +104,7 @@
       },
       async fetchData() {
         this.listLoading = true
-        const { data } = await getUserList(this.queryForm)
+        const { data } = await getTagNews(this.queryForm)
         const { total, list } = data ?? {}
         this.list = list
         this.total = total

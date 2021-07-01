@@ -3,15 +3,16 @@
     <vab-query-form>
       <vab-query-form-left-panel :span="12">
         <el-button
-          v-permission="'030105'"
+          v-permission="'030201'"
           icon="el-icon-plus"
           type="primary"
           @click="handleEdit"
         >
-          新增角色
+          新增用户
         </el-button>
       </vab-query-form-left-panel>
     </vab-query-form>
+
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -24,27 +25,33 @@
       ></el-table-column>
       <el-table-column
         show-overflow-tooltip
-        prop="roleName"
-        label="角色名称"
+        prop="nickname"
+        label="用户名"
       ></el-table-column>
+      <el-table-column show-overflow-tooltip label="权限">
+        <template #default="{ row }">
+          <el-tag v-for="(item, index) in row.permissions" :key="index">
+            {{ item }}
+          </el-tag>
+        </template>
+      </el-table-column>
 
       <el-table-column
         show-overflow-tooltip
-        prop="createTime"
-        label="创建时间"
+        prop="updateTime"
+        label="修改时间"
       ></el-table-column>
       <el-table-column show-overflow-tooltip label="操作" width="200">
         <template #default="{ row }">
-          <el-button type="text" @click="showDetail(row)">详情</el-button>
           <el-button
-            v-permission="'030103'"
+            v-permission="'030202'"
             type="text"
             @click="handleEdit(row)"
           >
             编辑
           </el-button>
           <el-button
-            v-permission="'030104'"
+            v-permission="'030203'"
             type="text"
             @click="handleDelete(row)"
           >
@@ -63,18 +70,16 @@
       @current-change="handleCurrentChange"
     ></el-pagination>
     <edit ref="edit" @fetch-data="fetchData"></edit>
-    <detail ref="detail"></detail>
   </div>
 </template>
 
 <script>
-  import { getList, deleteUser } from '@/api/roleList'
-  import Detail from './components/UserDetail'
-  import Edit from './components/RoleEdit'
+  import { getList, deleteUser, addUser } from '@/api/webUserList'
+  import Edit from './components/UserManagementEdit'
 
   export default {
-    name: 'RoleList',
-    components: { Edit, Detail },
+    name: 'UserList',
+    components: { Edit },
     data() {
       return {
         list: [],
@@ -92,9 +97,6 @@
       this.fetchData()
     },
     methods: {
-      showDetail({ id }) {
-        this.$refs['detail'].show(id)
-      },
       handleEdit(row) {
         if (row.id) {
           this.$refs['edit'].showEdit(row)

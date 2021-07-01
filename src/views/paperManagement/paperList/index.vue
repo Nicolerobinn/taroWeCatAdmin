@@ -2,7 +2,12 @@
   <div class="userManagement-container">
     <vab-query-form>
       <vab-query-form-left-panel :span="12">
-        <el-button icon="el-icon-plus" type="primary" @click="add">
+        <el-button
+          v-permission="'010102'"
+          icon="el-icon-plus"
+          type="primary"
+          @click="add"
+        >
           新增新闻
         </el-button>
       </vab-query-form-left-panel>
@@ -85,9 +90,23 @@
       ></el-table-column>
       <el-table-column show-overflow-tooltip label="操作" width="200">
         <template #default="{ row }">
-          <el-button type="text" @click="show(row)">查看</el-button>
-          <el-button type="text" @click="handleEdit(row)">编辑</el-button>
-          <el-button type="text" @click="handleDelete(row)">删除</el-button>
+          <el-button v-permission="'010101'" type="text" @click="show(row)">
+            查看
+          </el-button>
+          <el-button
+            v-permission="'010103'"
+            type="text"
+            @click="handleEdit(row)"
+          >
+            编辑
+          </el-button>
+          <el-button
+            v-permission="'010104'"
+            type="text"
+            @click="handleDelete(row)"
+          >
+            删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>

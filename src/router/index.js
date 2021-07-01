@@ -77,32 +77,23 @@ export const asyncRoutes = [
     ],
   },
   {
-    path: '/userManagement',
-    component: Layout,
-    redirect: 'noRedirect',
-    name: 'UserManagement',
-    meta: { title: '用户管理', icon: 'users-cog', permissions: '02' },
-    children: [
-      {
-        path: 'userList',
-        name: 'UserList',
-        component: () => import('@/views/userManagement/userList/index'),
-        meta: { title: '用户列表', permissions: '0201' },
-      },
-    ],
-  },
-  {
     path: '/taroManagement',
     component: Layout,
     redirect: 'noRedirect',
     name: 'TaroManagement',
-    meta: { title: '小程序用户管理', icon: 'users-cog', permissions: '08' },
+    meta: { title: '用户管理', icon: 'users-cog', permissions: '02' },
     children: [
       {
         path: 'taroList',
         name: 'TaroList',
         component: () => import('@/views/taroManagement/taroList/index'),
-        meta: { title: '小程序用户列表', permissions: '0801' },
+        meta: { title: '小程序用户列表', permissions: '0201' },
+      },
+      {
+        path: 'likeList',
+        name: 'LikeList',
+        component: () => import('@/views/taroManagement/likeList/index'),
+        meta: { title: '小程序用户点赞或转发列表', permissions: '020101' },
       },
     ],
   },
@@ -118,6 +109,12 @@ export const asyncRoutes = [
         name: 'RoleList',
         component: () => import('@/views/authorityManagement/roleList/index'),
         meta: { title: '角色列表', permissions: '0301' },
+      },
+      {
+        path: 'userList',
+        name: 'UserList',
+        component: () => import('@/views/authorityManagement/userList/index'),
+        meta: { title: '账号列表', permissions: '0302' },
       },
     ],
   },
