@@ -75,17 +75,9 @@
         label="转发数"
       ></el-table-column>
 
-      <el-table-column show-overflow-tooltip label="权限">
-        <template #default="{ row }">
-          <el-tag v-for="(item, index) in row.permissions" :key="index">
-            {{ item }}
-          </el-tag>
-        </template>
-      </el-table-column>
-
       <el-table-column
         show-overflow-tooltip
-        prop="datatime"
+        prop="updateTime"
         label="修改时间"
       ></el-table-column>
       <el-table-column show-overflow-tooltip label="操作" width="200">
@@ -159,9 +151,11 @@
       },
       handleDelete(row) {
         this.$baseConfirm('你确定要删除当前项吗', null, async () => {
-          const { msg } = await deletePaper(row.id)
-          this.$baseMessage(msg, 'success')
-          this.fetchData()
+          const res = await deletePaper(row.id)
+          if (res.code === 1) {
+            this.$baseMessage('删除成功', 'success')
+            this.fetchData()
+          }
         })
       },
       handleSizeChange(val) {

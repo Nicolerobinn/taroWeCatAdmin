@@ -14,8 +14,8 @@ const setting = {
   transpileDependencies: [],
   baseURL:
     process.env.NODE_ENV === 'development'
-      ? 'http://53xg1cpzyz.cqhttp.cn'
-      : 'http://53xg1cpzyz.cqhttp.cn',
+      ? 'http://32douu18xq.cqhttp.cn'
+      : 'http://32douu18xq.cqhttp.cn',
   //标题 （包括初次加载雪花屏的标题 页面的标题 浏览器的标题）
   title: 'news-admin',
   //简写
@@ -56,7 +56,7 @@ const setting = {
   //intelligence和all两种方式，前者后端权限只控制permissions不控制view文件的import（前后端配合，减轻后端工作量），all方式完全交给后端前端只负责加载
   authentication: 'intelligence',
   //vertical布局时是否只保持一个子菜单的展开
-  uniqueOpened: true,
+  uniqueOpened: false,
   //vertical布局时默认展开的菜单path，使用逗号隔开建议只展开一个
   defaultOopeneds: ['/vab'],
   //需要加loading层的请求，防止重复提交
@@ -67,7 +67,5 @@ const setting = {
   build7z: false,
   //代码生成机生成在view下的文件夹名称
   templateFolder: 'project',
-  //是否显示终端donation打印
-  donation: true,
 }
 module.exports = setting

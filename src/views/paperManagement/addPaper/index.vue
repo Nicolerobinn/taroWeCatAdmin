@@ -22,22 +22,30 @@
         </el-select>
       </el-form-item>
       <el-form-item
-        label="小程序新闻列表图片地址(逗号隔开)"
+        label="小程序新闻列表图片"
         style="width: 800px"
         prop="imgPaths"
       >
-        <el-input v-model="form.imgPaths" type="textarea" :rows="4"></el-input>
+        <el-upload
+          action="http://32douu18xq.cqhttp.cn/web/upload"
+          list-type="picture-card"
+          :headers="importHeaders"
+          :on-preview="handlePictureCardPreview"
+          :on-remove="handleRemove"
+          :on-success="handleSuccess"
+          :on-error="handleError"
+          :file-list="fileList"
+        >
+          <i class="el-icon-plus"></i>
+        </el-upload>
+        <el-dialog :visible.sync="dialogVisible">
+          <img width="100%" :src="dialogImageUrl" alt="" />
+        </el-dialog>
       </el-form-item>
-
       <el-form-item label="内容" prop="content" class="vab-quill-content">
-        <vab-quill
-          v-model="form.content"
-          :min-height="400"
-          :options="options"
-        ></vab-quill>
+        <div id="editor"></div>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="handleSee">预览效果</el-button>
         <el-button type="primary" @click="handleSave">保存</el-button>
       </el-form-item>
     </el-form>
@@ -51,37 +59,16 @@
 </template>
 
 <script>
-  import { addPaper, getChannel } from '@/api/paperList'
-  import vabQuill from '@/plugins/vabQuill'
+  import { addPaper, getChannel, uploadFile } from '@/api/paperList'
+  import E from 'wangeditor'
+  import store from '@/store'
   export default {
     name: 'AddPaper',
-    components: { vabQuill },
     data() {
       return {
-        options: {
-          theme: 'snow',
-          bounds: document.body,
-          debug: 'warn',
-          modules: {
-            toolbar: [
-              ['bold', 'italic', 'underline', 'strike'],
-              [{ header: [1, 2, 3, 4, 5, 6, false] }],
-              [{ size: ['small', false, 'large', 'huge'] }],
-              [{ color: [] }, { background: [] }],
-              ['blockquote', 'code-block'],
-              [{ list: 'ordered' }, { list: 'bullet' }],
-              [{ script: 'sub' }, { script: 'super' }],
-              [{ indent: '-1' }, { indent: '+1' }],
-              [{ align: [] }],
-              [{ direction: 'rtl' }],
-              [{ font: [] }],
-              ['clean'],
-              ['link', 'image'],
-            ],
-          },
-          placeholder: '内容...',
-          readOnly: false,
-        },
+        importHeaders: { token: store.getters['user/accessToken'] },
+        dialogImageUrl: '',
+        dialogVisible: false,
         dialogTableVisible: false,
         form: {
           title: '',
@@ -89,9 +76,14 @@
           channel: '',
           content: '',
           author: '',
-          imgPaths: '',
+          imgPaths: [],
         },
+        fileList: [],
+        paperList: [],
+        paperImgList: [],
         channelList: [],
+        editor: null,
+        editorData: '',
         rules: {
           title: [
             {
@@ -107,17 +99,17 @@
               trigger: 'blur',
             },
           ],
+          author: [
+            {
+              required: true,
+              message: '请输入作者',
+              trigger: 'blur',
+            },
+          ],
           content: [
             {
               required: true,
               message: '请输入内容',
-              trigger: 'blur',
-            },
-          ],
-          imgPaths: [
-            {
-              required: true,
-              message: '请输入图片地址',
               trigger: 'blur',
             },
           ],
@@ -131,11 +123,68 @@
         },
       }
     },
+    beforeDestroy() {
+      // 调用销毁 API 对当前编辑器实例进行销毁
+      this.editor.destroy()
+      this.editor = null
+    },
     async mounted() {
+      const editor = new E('#editor')
+      editor.config.showFullScreen = true
+      // 配置菜单栏，设置不需要的菜单
+      // editor.config.uploadImgServer = 'http://32douu18xq.cqhttp.cn/web/upload'
+      // editor.config.uploadImgHeaders = {
+      //   token: store.getters['user/accessToken'],
+      // }
+      // editor.config.uploadFileName = 'file'
+      editor.config.excludeMenus = ['video', 'emoticon']
+      editor.config.customUploadImg = this.custom
+      editor.config.uploadImgTimeout = 5 * 1000000000
+      editor.config.uploadImgMaxLength = 1 // 一次最多上传 5 个图片
+      editor.config.onchange = (newHtml) => {
+        this.form.content = newHtml
+      } // 插入网络图片的回调
+      editor.config.showLinkImg = false
+      editor.create()
+      this.editor = editor
       const res = await getChannel()
       this.channelList = res.data ?? []
     },
     methods: {
+      async custom(resultFiles, insertImgFn) {
+        // 上传文件 创建FormData
+        const formData = new FormData()
+        // upFile就是后台接收的key
+        formData.append('file', resultFiles[0], resultFiles[0].name)
+        const res = await uploadFile(formData)
+        if (res.code === 1) {
+          insertImgFn(res.data)
+        }
+        // resultFiles 是 input 中选中的文件列表
+        // insertImgFn 是获取图片 url 后，插入到编辑器的方法
+        // 上传图片，返回结果，将图片插入到编辑器中
+      },
+      handleRemove(file, fileList) {
+        const ind = this.fileList.findIndex((e) => e.uid === file.uid)
+        this.fileList = this.fileList.filter((e, i) => ind !== i)
+      },
+      handleSuccess(e) {
+        this.$baseMessage('上传图片成功', 'success')
+        this.fileList.push({
+          name: '',
+          url: e.data,
+        })
+      },
+      beforeRemove(file) {
+        return this.$baseMessage(`确定移除 ${file.name}？`, 'error')
+      },
+      handleError(e) {
+        this.$baseMessage('上传图片失败', 'error')
+      },
+      handlePictureCardPreview(file) {
+        this.dialogImageUrl = file.url
+        this.dialogVisible = true
+      },
       handleSee() {
         this.$refs['form'].validate((valid) => {
           this.$refs.form.validateField('content', (errorMsg) => {})
@@ -154,9 +203,11 @@
           })
           if (valid) {
             const obj = { ...this.form }
+            obj.imgPaths = this.fileList.map((e) => e.url).join()
             const res = await addPaper(obj)
-            console.log(res)
-            this.$baseMessage('submit!', 'success')
+            if (res.code === 1) {
+              this.$baseMessage('添加新闻成功!', 'success')
+            }
           } else {
             return false
           }
@@ -165,34 +216,3 @@
     },
   }
 </script>
-<style lang="scss" scoped>
-  .editor-container {
-    .news {
-      &-title {
-        text-align: center;
-      }
-
-      &-content {
-        ::v-deep {
-          p {
-            line-height: 30px;
-
-            img {
-              display: block;
-              margin-right: auto;
-              margin-left: auto;
-            }
-          }
-        }
-      }
-    }
-
-    .vab-quill-content {
-      ::v-deep {
-        .el-form-item__content {
-          line-height: normal;
-        }
-      }
-    }
-  }
-</style>

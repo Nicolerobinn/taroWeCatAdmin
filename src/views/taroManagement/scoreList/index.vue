@@ -8,15 +8,15 @@
         <el-form :inline="true" :model="queryForm" @submit.native.prevent>
           <el-form-item>
             <el-input
-              v-model.trim="queryForm.searchInput"
-              placeholder="请输入用户名"
+              v-model.trim="queryForm.userId"
+              placeholder="小程序用户id"
               clearable
             />
           </el-form-item>
-          <el-form-item label="性别" prop="gender">
-            <el-select v-model="queryForm.gender" placeholder="请选择性别">
-              <el-option label="男" value="1"></el-option>
-              <el-option label="女" value="0"></el-option>
+          <el-form-item label="性别" prop="type">
+            <el-select v-model="queryForm.type" placeholder="点赞或转发">
+              <el-option label="转发" value="1"></el-option>
+              <el-option label="点赞" value="0"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item>
@@ -40,48 +40,23 @@
       ></el-table-column>
       <el-table-column
         show-overflow-tooltip
-        prop="nickName"
-        label="昵称"
+        prop="subjectId"
+        label="subjectId"
       ></el-table-column>
       <el-table-column
         show-overflow-tooltip
-        prop="phone"
-        label="电话"
+        prop="subjectName"
+        label="学科名称"
       ></el-table-column>
       <el-table-column
         show-overflow-tooltip
-        prop="gender"
-        label="性别"
+        prop="score"
+        label="成绩"
       ></el-table-column>
       <el-table-column
         show-overflow-tooltip
-        prop="avatarUrl"
-        label="头像"
-      ></el-table-column>
-      <el-table-column
-        show-overflow-tooltip
-        prop="country"
-        label="国家"
-      ></el-table-column>
-      <el-table-column
-        show-overflow-tooltip
-        prop="province"
-        label="省"
-      ></el-table-column>
-      <el-table-column
-        show-overflow-tooltip
-        prop="city"
-        label="市"
-      ></el-table-column>
-      <el-table-column
-        show-overflow-tooltip
-        prop="openId"
-        label="openId"
-      ></el-table-column>
-      <el-table-column
-        show-overflow-tooltip
-        prop="createTime"
-        label="创建时间"
+        prop="time"
+        label="录入成绩时间"
       ></el-table-column>
     </el-table>
     <el-pagination
@@ -97,10 +72,10 @@
 </template>
 
 <script>
-  import { getUserList } from '@/api/userList'
+  import { getScore } from '@/api/userList'
 
   export default {
-    name: 'TaroList',
+    name: 'ScoreList',
     data() {
       return {
         list: [],
@@ -112,7 +87,8 @@
         queryForm: {
           pageNum: 1,
           pageSize: 10,
-          searchInput: '',
+          userId: '',
+          type: '',
         },
       }
     },
@@ -134,7 +110,7 @@
       },
       async fetchData() {
         this.listLoading = true
-        const { data } = await getUserList(this.queryForm)
+        const { data } = await getScore(this.queryForm)
         const { total, list } = data ?? {}
         this.list = list
         this.total = total

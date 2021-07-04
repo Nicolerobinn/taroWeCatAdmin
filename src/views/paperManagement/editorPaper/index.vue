@@ -1,24 +1,51 @@
 <template>
   <div class="editor-container">
     <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-      <el-form-item label="标题" prop="title">
+      <el-form-item label="新闻标题" prop="title">
         <el-input v-model="form.title" maxlength="20"></el-input>
       </el-form-item>
-      <el-form-item label="所属模块" prop="module">
-        <el-select v-model="form.module">
-          <el-option label="新闻动态" value="1"></el-option>
-          <el-option label="实时热点" value="2"></el-option>
+      <el-form-item label="摘要" prop="remark">
+        <el-input v-model="form.remark"></el-input>
+      </el-form-item>
+      <el-form-item label="作者" style="width: 400px" prop="author">
+        <el-input v-model="form.author" maxlength="20"></el-input>
+      </el-form-item>
+      <el-form-item label="所属频道" prop="channel">
+        <el-select v-model="form.channel">
+          <template v-for="(a, i) in channelList">
+            <el-option
+              :key="i"
+              :label="a.channel_name"
+              :value="a.id"
+            ></el-option>
+          </template>
         </el-select>
       </el-form-item>
+      <el-form-item
+        label="小程序新闻列表图片"
+        style="width: 800px"
+        prop="imgPaths"
+      >
+        <el-upload
+          action="http://32douu18xq.cqhttp.cn/web/upload"
+          list-type="picture-card"
+          :headers="importHeaders"
+          :on-preview="handlePictureCardPreview"
+          :on-remove="handleRemove"
+          :on-success="handleSuccess"
+          :on-error="handleError"
+          :file-list="fileList"
+        >
+          <i class="el-icon-plus"></i>
+        </el-upload>
+        <el-dialog :visible.sync="dialogVisible">
+          <img width="100%" :src="dialogImageUrl" alt="" />
+        </el-dialog>
+      </el-form-item>
       <el-form-item label="内容" prop="content" class="vab-quill-content">
-        <vab-quill
-          v-model="form.content"
-          :min-height="400"
-          :options="options"
-        ></vab-quill>
+        <div id="editor"></div>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="handleSee">预览效果</el-button>
         <el-button type="primary" @click="handleSave">保存</el-button>
       </el-form-item>
     </el-form>
@@ -32,43 +59,31 @@
 </template>
 
 <script>
-  import vabQuill from '@/plugins/vabQuill'
+  import { editPaper, getDetail, getChannel, uploadFile } from '@/api/paperList'
+  import E from 'wangeditor'
+  import store from '@/store'
   export default {
     name: 'EditorPaper',
-    components: { vabQuill },
     data() {
       return {
-        options: {
-          theme: 'snow',
-          bounds: document.body,
-          debug: 'warn',
-          modules: {
-            toolbar: [
-              ['bold', 'italic', 'underline', 'strike'],
-              [{ header: [1, 2, 3, 4, 5, 6, false] }],
-              [{ size: ['small', false, 'large', 'huge'] }],
-              [{ color: [] }, { background: [] }],
-              ['blockquote', 'code-block'],
-              [{ list: 'ordered' }, { list: 'bullet' }],
-              [{ script: 'sub' }, { script: 'super' }],
-              [{ indent: '-1' }, { indent: '+1' }],
-              [{ align: [] }],
-              [{ direction: 'rtl' }],
-              [{ font: [] }],
-              ['clean'],
-              ['link', 'image'],
-            ],
-          },
-          placeholder: '内容...',
-          readOnly: false,
-        },
-        borderColor: '#dcdfe6',
+        importHeaders: { token: store.getters['user/accessToken'] },
+        dialogImageUrl: '',
+        dialogVisible: false,
         dialogTableVisible: false,
         form: {
           title: '',
-          module: '',
+          remark: '',
+          channel: '',
           content: '',
+          author: '',
+          imgPaths: '',
         },
+        fileList: [],
+        paperList: [],
+        paperImgList: [],
+        channelList: [],
+        editor: null,
+        editorData: '',
         rules: {
           title: [
             {
@@ -77,11 +92,18 @@
               trigger: 'blur',
             },
           ],
-          module: [
+          remark: [
             {
               required: true,
-              message: '请选择模块',
-              trigger: 'change',
+              message: '请输入摘要',
+              trigger: 'blur',
+            },
+          ],
+          author: [
+            {
+              required: true,
+              message: '请输入作者',
+              trigger: 'blur',
             },
           ],
           content: [
@@ -91,15 +113,88 @@
               trigger: 'blur',
             },
           ],
+          channel: [
+            {
+              required: true,
+              message: '请选择频道',
+              trigger: 'blur',
+            },
+          ],
         },
       }
     },
-    mounted() {
-      if (!this.$route.params?.id) {
+    beforeDestroy() {
+      // 调用销毁 API 对当前编辑器实例进行销毁
+      this.editor.destroy()
+      this.editor = null
+    },
+    async mounted() {
+      const { id } = this.$route.params || {}
+      if (!id) {
+        this.$baseMessage('未获取到数据ID，请携带ID', 'error')
+        return
         // TODO 做错误处理
       }
+      const resp = await getDetail(id)
+      if (resp.code === 1) {
+        this.form = resp.data
+        this.fileList = resp.data.imgPaths.split(',').map((e) => {
+          return {
+            name: '',
+            url: e,
+          }
+        })
+      } else {
+        return
+      }
+      const editor = new E('#editor')
+      editor.config.showFullScreen = true
+      editor.config.excludeMenus = ['video', 'emoticon']
+      editor.config.customUploadImg = this.custom
+      editor.config.uploadImgTimeout = 5 * 1000000000
+      editor.config.uploadImgMaxLength = 1 // 一次最多上传 5 个图片
+      editor.config.onchange = (newHtml) => {
+        this.form.content = newHtml
+      } // 插入网络图片的回调
+      editor.config.showLinkImg = false
+      editor.create()
+      editor.txt.html(resp.data.content) // 重新设置编辑器内容
+      this.editor = editor
+      const res = await getChannel()
+      this.channelList = res.data ?? []
     },
     methods: {
+      async custom(resultFiles, insertImgFn) {
+        // 上传文件 创建FormData
+        const formData = new FormData()
+        // upFile就是后台接收的key
+        formData.append('file', resultFiles[0], resultFiles[0].name)
+        const res = await uploadFile(formData)
+        if (res.code === 1) {
+          insertImgFn(res.data)
+        }
+      },
+      handleRemove(file, fileList) {
+        const ind = this.fileList.findIndex((e) => e.uid === file.uid)
+        this.fileList = this.fileList.filter((e, i) => ind !== i)
+      },
+      handleSuccess(e) {
+        this.$baseMessage('上传图片成功', 'success')
+        this.fileList.push({
+          name: '',
+          url: e.data,
+        })
+      },
+      beforeRemove(file) {
+        return this.$baseMessage(`确定移除 ${file.name}？`, 'error')
+      },
+      handleError(e) {
+        this.$baseMessage('上传图片失败', 'error')
+      },
+      handlePictureCardPreview(file) {
+        this.dialogImageUrl = file.url
+        this.dialogVisible = true
+      },
       handleSee() {
         this.$refs['form'].validate((valid) => {
           this.$refs.form.validateField('content', (errorMsg) => {})
@@ -111,15 +206,18 @@
         })
       },
       handleSave() {
-        this.$refs['form'].validate((valid) => {
+        this.$refs['form'].validate(async (valid) => {
           this.$refs.form.validateField('content', (errorMsg) => {
-            this.borderColor = '#dcdfe6'
             if (errorMsg) {
-              this.borderColor = '#F56C6C'
             }
           })
           if (valid) {
-            this.$baseMessage('submit!', 'success')
+            const obj = { ...this.form }
+            obj.imgPaths = this.fileList.map((e) => e.url).join()
+            const res = await editPaper(obj)
+            if (res.code === 1) {
+              this.$baseMessage('编辑成功!', 'success')
+            }
           } else {
             return false
           }
@@ -128,34 +226,3 @@
     },
   }
 </script>
-<style lang="scss" scoped>
-  .editor-container {
-    .news {
-      &-title {
-        text-align: center;
-      }
-
-      &-content {
-        ::v-deep {
-          p {
-            line-height: 30px;
-
-            img {
-              display: block;
-              margin-right: auto;
-              margin-left: auto;
-            }
-          }
-        }
-      }
-    }
-
-    .vab-quill-content {
-      ::v-deep {
-        .el-form-item__content {
-          line-height: normal;
-        }
-      }
-    }
-  }
-</style>

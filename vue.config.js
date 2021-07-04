@@ -15,12 +15,9 @@ const {
   devPort,
   providePlugin,
   build7z,
-  donation,
   baseURL,
 } = require('./src/config')
-const { webpackBarName, webpackBanner, donationConsole } = require('zx-layouts')
 
-if (donation) donationConsole()
 const { version, author } = require('./package.json')
 const Webpack = require('webpack')
 const WebpackBar = require('webpackbar')
@@ -65,12 +62,7 @@ module.exports = {
           '@': resolve('src'),
         },
       },
-      plugins: [
-        new Webpack.ProvidePlugin(providePlugin),
-        new WebpackBar({
-          name: webpackBarName,
-        }),
-      ],
+      plugins: [new Webpack.ProvidePlugin(providePlugin)],
     }
   },
   chainWebpack(config) {
@@ -141,7 +133,7 @@ module.exports = {
       })
       config
         .plugin('banner')
-        .use(Webpack.BannerPlugin, [`${webpackBanner}${time}`])
+        .use(Webpack.BannerPlugin, [`${time}`])
         .end()
       config.module
         .rule('images')

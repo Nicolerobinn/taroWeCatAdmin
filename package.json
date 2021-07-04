@@ -59,12 +59,10 @@
     "vue-echarts": "5.0.0-beta.0",
     "vue-router": "^3.5.2",
     "vuex": "^3.6.2",
+    "wangeditor": "^4.7.5",
     "zx-count": "^0.3.7",
     "zx-layouts": "^0.6.25",
     "zx-magnifie": "^0.4.0",
-    "zx-markdown-editor": "^0.0.2",
-    "zx-player": "^1.0.2",
-    "zx-quill": "^0.0.3",
     "zx-templates": "^0.0.26",
     "zx-verify": "^0.0.2"
   },

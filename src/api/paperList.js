@@ -16,13 +16,13 @@ export async function getDetail(id) {
 
 export async function deletePaper(id) {
   return request({
-    url: `web/webUser/deleteNews/${id}`,
+    url: `web/news/deleteNews/${id}`,
     method: 'delete',
   })
 }
 export async function editPaper(data) {
   return request({
-    url: 'web/Permission/update',
+    url: 'web/news/update',
     method: 'put',
     data,
   })
@@ -39,5 +39,16 @@ export async function getChannel() {
   return request({
     url: 'web/news/getChannel',
     method: 'get',
+  })
+}
+
+export async function uploadFile(data) {
+  return request({
+    url: 'web/upload',
+    method: 'post',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data,
   })
 }
