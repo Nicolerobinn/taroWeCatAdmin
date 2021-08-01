@@ -19,20 +19,15 @@
     >
       <el-table-column
         show-overflow-tooltip
-        prop="id"
-        label="id"
-      ></el-table-column>
-      <el-table-column
-        show-overflow-tooltip
         prop="roleName"
         label="角色名称"
       ></el-table-column>
 
-      <el-table-column
-        show-overflow-tooltip
-        prop="createTime"
-        label="创建时间"
-      ></el-table-column>
+      <el-table-column show-overflow-tooltip prop="createTime" label="创建时间">
+        <template #default="{ row }">
+          {{ $dayJS(row.createTime).format('YYYY-MM-DD HH:mm:ss') }}
+        </template>
+      </el-table-column>
       <el-table-column show-overflow-tooltip label="操作" width="200">
         <template #default="{ row }">
           <el-button type="text" @click="showDetail(row)">详情</el-button>

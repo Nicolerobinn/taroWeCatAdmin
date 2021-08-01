@@ -15,11 +15,6 @@
     >
       <el-table-column
         show-overflow-tooltip
-        prop="id"
-        label="id"
-      ></el-table-column>
-      <el-table-column
-        show-overflow-tooltip
         prop="nickname"
         label="用户名"
       ></el-table-column>
@@ -31,11 +26,11 @@
         </template>
       </el-table-column>
 
-      <el-table-column
-        show-overflow-tooltip
-        prop="updateTime"
-        label="修改时间"
-      ></el-table-column>
+      <el-table-column show-overflow-tooltip prop="updateTime" label="修改时间">
+        <template #default="{ row }">
+          {{ $dayJS(row.updateTime).format('YYYY-MM-DD HH:mm:ss') }}
+        </template>
+      </el-table-column>
       <el-table-column show-overflow-tooltip label="操作" width="200">
         <template #default="{ row }">
           <el-button type="text" @click="handleEdit(row)">编辑</el-button>

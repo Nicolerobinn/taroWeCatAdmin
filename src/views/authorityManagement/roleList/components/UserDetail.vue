@@ -13,7 +13,11 @@
       ></el-table-column>
       <el-table-column prop="url" label="url"></el-table-column>
       <el-table-column prop="isLabel" label="isLabel"></el-table-column>
-      <el-table-column prop="createTime" label="创建时间"></el-table-column>
+      <el-table-column prop="createTime" label="创建时间">
+        <template #default="{ row }">
+          {{ $dayJS(row.createTime).format('YYYY-MM-DD HH:mm:ss') }}
+        </template>
+      </el-table-column>
     </el-table>
   </el-dialog>
 </template>

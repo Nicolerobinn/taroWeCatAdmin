@@ -35,11 +35,6 @@
     >
       <el-table-column
         show-overflow-tooltip
-        prop="id"
-        label="id"
-      ></el-table-column>
-      <el-table-column
-        show-overflow-tooltip
         prop="nickName"
         label="昵称"
       ></el-table-column>
@@ -78,11 +73,11 @@
         prop="openId"
         label="openId"
       ></el-table-column>
-      <el-table-column
-        show-overflow-tooltip
-        prop="createTime"
-        label="创建时间"
-      ></el-table-column>
+      <el-table-column show-overflow-tooltip prop="createTime" label="创建时间">
+        <template #default="{ row }">
+          {{ $dayJS(row.createTime).format('YYYY-MM-DD HH:mm:ss') }}
+        </template>
+      </el-table-column>
     </el-table>
     <el-pagination
       background

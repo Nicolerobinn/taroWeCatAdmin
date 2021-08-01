@@ -35,11 +35,6 @@
     >
       <el-table-column
         show-overflow-tooltip
-        prop="id"
-        label="id"
-      ></el-table-column>
-      <el-table-column
-        show-overflow-tooltip
         prop="title"
         label="标题"
       ></el-table-column>
@@ -48,11 +43,11 @@
         prop="channelName"
         label="所属模块"
       ></el-table-column>
-      <el-table-column
-        show-overflow-tooltip
-        prop="createTime"
-        label="创建时间"
-      ></el-table-column>
+      <el-table-column show-overflow-tooltip prop="createTime" label="创建时间">
+        <template #default="{ row }">
+          {{ $dayJS(row.createTime).format('YYYY-MM-DD HH:mm:ss') }}
+        </template>
+      </el-table-column>
     </el-table>
     <el-pagination
       background

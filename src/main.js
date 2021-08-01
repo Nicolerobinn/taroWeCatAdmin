@@ -1,9 +1,14 @@
 import Vue from 'vue'
 import App from './App'
+import dayjs from 'dayjs'
 import store from './store'
 import router from './router'
 import './plugins'
 import '@/layouts/export'
+import relativeTime from 'dayjs/plugin/relativeTime'
+import 'dayjs/locale/zh-cn'
+dayjs.extend(relativeTime)
+Vue.prototype.$dayJS = dayjs
 
 /**
  * @author cxt （不想保留author可删除）

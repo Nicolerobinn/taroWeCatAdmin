@@ -20,13 +20,13 @@
     >
       <el-table-column
         show-overflow-tooltip
-        prop="id"
-        label="id"
+        prop="nickname"
+        label="昵称"
       ></el-table-column>
       <el-table-column
         show-overflow-tooltip
-        prop="nickname"
-        label="用户名"
+        prop="userName"
+        label="账号名"
       ></el-table-column>
       <el-table-column show-overflow-tooltip label="权限">
         <template #default="{ row }">
@@ -36,11 +36,11 @@
         </template>
       </el-table-column>
 
-      <el-table-column
-        show-overflow-tooltip
-        prop="updateTime"
-        label="修改时间"
-      ></el-table-column>
+      <el-table-column show-overflow-tooltip prop="updateTime" label="修改时间">
+        <template #default="{ row }">
+          {{ $dayJS(row.updateTime).format('YYYY-MM-DD HH:mm:ss') }}
+        </template>
+      </el-table-column>
       <el-table-column show-overflow-tooltip label="操作" width="200">
         <template #default="{ row }">
           <el-button
@@ -76,7 +76,6 @@
 <script>
   import { getList, deleteUser, addUser } from '@/api/webUserList'
   import Edit from './components/UserManagementEdit'
-
   export default {
     name: 'UserList',
     components: { Edit },

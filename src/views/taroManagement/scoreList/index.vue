@@ -35,11 +35,6 @@
     >
       <el-table-column
         show-overflow-tooltip
-        prop="id"
-        label="id"
-      ></el-table-column>
-      <el-table-column
-        show-overflow-tooltip
         prop="subjectId"
         label="subjectId"
       ></el-table-column>
@@ -53,11 +48,11 @@
         prop="score"
         label="成绩"
       ></el-table-column>
-      <el-table-column
-        show-overflow-tooltip
-        prop="time"
-        label="录入成绩时间"
-      ></el-table-column>
+      <el-table-column show-overflow-tooltip prop="time" label="录入成绩时间">
+        <template #default="{ row }">
+          {{ $dayJS(row.time).format('YYYY-MM-DD HH:mm:ss') }}
+        </template>
+      </el-table-column>
     </el-table>
     <el-pagination
       background

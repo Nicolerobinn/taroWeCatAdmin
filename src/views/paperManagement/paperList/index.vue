@@ -34,16 +34,11 @@
       :data="list"
       :element-loading-text="elementLoadingText"
     >
-      <el-table-column
-        show-overflow-tooltip
-        prop="id"
-        label="id"
-      ></el-table-column>
-      <el-table-column
-        show-overflow-tooltip
-        prop="createTime"
-        label="创建时间"
-      ></el-table-column>
+      <el-table-column show-overflow-tooltip prop="createTime" label="创建时间">
+        <template #default="{ row }">
+          {{ $dayJS(row.createTime).format('YYYY-MM-DD HH:mm:ss') }}
+        </template>
+      </el-table-column>
       <el-table-column
         show-overflow-tooltip
         prop="tagNum"
@@ -75,11 +70,11 @@
         label="转发数"
       ></el-table-column>
 
-      <el-table-column
-        show-overflow-tooltip
-        prop="updateTime"
-        label="修改时间"
-      ></el-table-column>
+      <el-table-column show-overflow-tooltip prop="updateTime" label="修改时间">
+        <template #default="{ row }">
+          {{ $dayJS(row.updateTime).format('YYYY-MM-DD HH:mm:ss') }}
+        </template>
+      </el-table-column>
       <el-table-column show-overflow-tooltip label="操作" width="200">
         <template #default="{ row }">
           <el-button v-permission="'010101'" type="text" @click="show(row)">
