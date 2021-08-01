@@ -78,6 +78,24 @@
           {{ $dayJS(row.createTime).format('YYYY-MM-DD HH:mm:ss') }}
         </template>
       </el-table-column>
+      <el-table-column show-overflow-tooltip label="查看记录" width="200">
+        <template #default="{ row }">
+          <el-button
+            v-permission="'020101'"
+            type="text"
+            @click="goTo(`LikeList/${row.id}`)"
+          >
+            点赞/转发
+          </el-button>
+          <el-button
+            v-permission="'020102'"
+            type="text"
+            @click="goTo(`ScoreList/${row.id}`)"
+          >
+            成绩
+          </el-button>
+        </template>
+      </el-table-column>
     </el-table>
     <el-pagination
       background
@@ -105,6 +123,7 @@
         selectRows: '',
         elementLoadingText: '正在加载...',
         queryForm: {
+          gender: '1',
           pageNum: 1,
           pageSize: 10,
           searchInput: '',
@@ -115,6 +134,9 @@
       this.fetchData()
     },
     methods: {
+      goTo(str) {
+        this.$router.push(str)
+      },
       handleSizeChange(val) {
         this.queryForm.pageSize = val
         this.fetchData()

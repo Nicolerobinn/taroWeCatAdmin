@@ -182,7 +182,6 @@
         this.$baseMessage('上传图片失败', 'error')
       },
       handlePictureCardPreview(file) {
-        conosle.log(file.url)
         this.dialogImageUrl = file.url
         this.dialogVisible = true
       },
@@ -208,6 +207,7 @@
             const res = await addPaper(obj)
             if (res.code === 1) {
               this.$baseMessage('添加新闻成功!', 'success')
+              this.$router.push('PaperList')
             }
           } else {
             return false

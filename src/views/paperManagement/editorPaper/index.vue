@@ -217,6 +217,7 @@
             const res = await editPaper(obj)
             if (res.code === 1) {
               this.$baseMessage('编辑成功!', 'success')
+              this.$router.push('PaperList')
             }
           } else {
             return false

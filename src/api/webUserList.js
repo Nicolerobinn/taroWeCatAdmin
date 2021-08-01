@@ -14,8 +14,8 @@ export async function deleteUser(id) {
 }
 export async function editUser(data) {
   return request({
-    url: 'web/webUser/saveUser',
-    method: 'put',
+    url: 'web/webUser/updateUser',
+    method: 'post',
     data,
   })
 }

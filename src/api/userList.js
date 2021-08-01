@@ -13,7 +13,7 @@ export async function getTagNews({ pageSize, pageNum, type, userId }) {
 }
 export async function getScore({ pageSize, pageNum, type, userId }) {
   return request({
-    url: `web/appUser/getScore?pageSize=${pageSize}&pageNum=${pageNum}&type=${type}&userId=${userId}`,
+    url: `web/appUser/getScore?pageSize=${pageSize}&pageNum=${pageNum}&userId=${userId}`,
     method: 'get',
   })
 }

@@ -71,6 +71,7 @@
         checkedNodes.forEach((item) => {
           keyArr.push(item.id)
         })
+        console.log(keyArr)
         this.form.menuList = keyArr
       },
       // 清除选中

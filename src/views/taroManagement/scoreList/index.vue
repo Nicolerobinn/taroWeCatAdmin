@@ -1,33 +1,5 @@
 <template>
   <div class="userManagement-container">
-    <vab-query-form>
-      <vab-query-form-left-panel :span="12">
-        <div style="color: #fff">123</div>
-      </vab-query-form-left-panel>
-      <vab-query-form-right-panel :span="12">
-        <el-form :inline="true" :model="queryForm" @submit.native.prevent>
-          <el-form-item>
-            <el-input
-              v-model.trim="queryForm.userId"
-              placeholder="小程序用户id"
-              clearable
-            />
-          </el-form-item>
-          <el-form-item label="性别" prop="type">
-            <el-select v-model="queryForm.type" placeholder="点赞或转发">
-              <el-option label="转发" value="1"></el-option>
-              <el-option label="点赞" value="0"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item>
-            <el-button icon="el-icon-search" type="primary" @click="queryData">
-              查询
-            </el-button>
-          </el-form-item>
-        </el-form>
-      </vab-query-form-right-panel>
-    </vab-query-form>
-
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -83,11 +55,19 @@
           pageNum: 1,
           pageSize: 10,
           userId: '',
-          type: '',
         },
       }
     },
     created() {
+      const { id } = this.$route.params || {}
+      if (!id) {
+        this.$baseMessage('未获取到数据ID，请携带ID', 'error')
+        return
+        // TODO 做错误处理
+      }
+      this.queryForm.userId = id
+    },
+    mounted() {
       this.fetchData()
     },
     methods: {
@@ -105,6 +85,7 @@
       },
       async fetchData() {
         this.listLoading = true
+        console.log(this.queryForm)
         const { data } = await getScore(this.queryForm)
         const { total, list } = data ?? {}
         this.list = list

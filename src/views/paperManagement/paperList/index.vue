@@ -34,15 +34,15 @@
       :data="list"
       :element-loading-text="elementLoadingText"
     >
-      <el-table-column show-overflow-tooltip prop="createTime" label="创建时间">
-        <template #default="{ row }">
-          {{ $dayJS(row.createTime).format('YYYY-MM-DD HH:mm:ss') }}
-        </template>
-      </el-table-column>
       <el-table-column
         show-overflow-tooltip
         prop="tagNum"
         label="点赞数"
+      ></el-table-column>
+      <el-table-column
+        show-overflow-tooltip
+        prop="transponderNum"
+        label="转发数"
       ></el-table-column>
       <el-table-column
         show-overflow-tooltip
@@ -64,12 +64,11 @@
         prop="channelName"
         label="频道名称"
       ></el-table-column>
-      <el-table-column
-        show-overflow-tooltip
-        prop="transponderNum"
-        label="转发数"
-      ></el-table-column>
-
+      <el-table-column show-overflow-tooltip prop="createTime" label="创建时间">
+        <template #default="{ row }">
+          {{ $dayJS(row.createTime).format('YYYY-MM-DD HH:mm:ss') }}
+        </template>
+      </el-table-column>
       <el-table-column show-overflow-tooltip prop="updateTime" label="修改时间">
         <template #default="{ row }">
           {{ $dayJS(row.updateTime).format('YYYY-MM-DD HH:mm:ss') }}
