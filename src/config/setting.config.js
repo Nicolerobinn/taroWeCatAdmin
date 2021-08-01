@@ -14,8 +14,8 @@ const setting = {
   transpileDependencies: [],
   baseURL:
     process.env.NODE_ENV === 'development'
-      ? 'http://32douu18xq.cqhttp.cn'
-      : 'http://32douu18xq.cqhttp.cn',
+      ? 'http://139.196.30.186/api'
+      : 'http://139.196.30.186/api',
   //标题 （包括初次加载雪花屏的标题 页面的标题 浏览器的标题）
   title: 'news-admin',
   //简写

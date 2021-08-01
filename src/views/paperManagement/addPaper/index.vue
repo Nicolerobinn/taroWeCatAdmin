@@ -27,7 +27,7 @@
         prop="imgPaths"
       >
         <el-upload
-          action="http://32douu18xq.cqhttp.cn/web/upload"
+          action="http://139.196.30.186/api/web/upload"
           list-type="picture-card"
           :headers="importHeaders"
           :on-preview="handlePictureCardPreview"
@@ -182,6 +182,7 @@
         this.$baseMessage('上传图片失败', 'error')
       },
       handlePictureCardPreview(file) {
+        conosle.log(file.url)
         this.dialogImageUrl = file.url
         this.dialogVisible = true
       },

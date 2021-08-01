@@ -66,7 +66,7 @@
 
 <script>
   import { isPassword } from '@/utils/validate'
-
+  import { MD } from '@/utils/md5'
   export default {
     name: 'Login',
     directives: {
@@ -144,11 +144,13 @@
         })
       },
       handleLogin() {
-        this.$refs.form.validate((valid) => {
+        this.$refs.form.validate(async (valid) => {
           if (valid) {
             this.loading = true
+            const obj = { ...this.form }
+            obj.password = await MD(obj.password)
             this.$store
-              .dispatch('user/login', this.form)
+              .dispatch('user/login', obj)
               .then(() => {
                 const routerPath =
                   this.redirect === '/404' || this.redirect === '/401'
