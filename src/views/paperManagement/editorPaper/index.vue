@@ -217,7 +217,9 @@
             const res = await editPaper(obj)
             if (res.code === 1) {
               this.$baseMessage('编辑成功!', 'success')
-              this.$router.push('PaperList')
+              this.$router.push({
+                path: '/paperManagement/paperList',
+              })
             }
           } else {
             return false

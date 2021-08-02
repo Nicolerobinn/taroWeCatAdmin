@@ -16,9 +16,9 @@
           autocomplete="off"
         ></el-input>
       </el-form-item>
-      <!-- <el-form-item label="昵称" prop="nickname">
+      <el-form-item label="昵称" prop="nickname">
         <el-input v-model.trim="form.nickname" autocomplete="off"></el-input>
-      </el-form-item> -->
+      </el-form-item>
       <el-form-item label="权限" prop="roleId">
         <el-radio-group v-model="form.roleId">
           <template v-for="(a, i) in permissions">

@@ -43,16 +43,16 @@
         prop="phone"
         label="电话"
       ></el-table-column>
-      <el-table-column
-        show-overflow-tooltip
-        prop="gender"
-        label="性别"
-      ></el-table-column>
-      <el-table-column
-        show-overflow-tooltip
-        prop="avatarUrl"
-        label="头像"
-      ></el-table-column>
+      <el-table-column show-overflow-tooltip prop="gender" label="性别">
+        <template #default="{ row }">
+          {{ row.gender === 1 ? '男' : '女' }}
+        </template>
+      </el-table-column>
+      <el-table-column show-overflow-tooltip prop="avatarUrl" label="头像">
+        <template #default="{ row }">
+          <el-avatar :src="row.avatarUrl"></el-avatar>
+        </template>
+      </el-table-column>
       <el-table-column
         show-overflow-tooltip
         prop="country"

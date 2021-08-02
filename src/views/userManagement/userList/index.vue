@@ -18,13 +18,11 @@
         prop="nickname"
         label="用户名"
       ></el-table-column>
-      <el-table-column show-overflow-tooltip label="权限">
-        <template #default="{ row }">
-          <el-tag v-for="(item, index) in row.permissions" :key="index">
-            {{ item }}
-          </el-tag>
-        </template>
-      </el-table-column>
+      <el-table-column
+        show-overflow-tooltip
+        label="权限"
+        prop="roleName"
+      ></el-table-column>
 
       <el-table-column show-overflow-tooltip prop="updateTime" label="修改时间">
         <template #default="{ row }">
