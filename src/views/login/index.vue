@@ -95,8 +95,8 @@
         nodeEnv: process.env.NODE_ENV,
         title: this.$baseTitle,
         form: {
-          userName: 'admin',
-          password: 'admin',
+          userName: '',
+          password: '',
         },
         rules: {
           userName: [

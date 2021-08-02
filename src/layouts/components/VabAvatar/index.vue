@@ -1,7 +1,11 @@
 <template>
   <el-dropdown @command="handleCommand">
     <span class="avatar-dropdown">
-      <img class="user-avatar" :src="avatar" alt="" />
+      <img
+        class="user-avatar"
+        src="https://i.gtimg.cn/club/item/face/img/2/15922_100.gif"
+        alt=""
+      />
       <div class="user-name">
         {{ username }}
         <i class="el-icon-arrow-down el-icon--right"></i>
@@ -43,12 +47,7 @@
           null,
           async () => {
             await this.$store.dispatch('user/logout')
-            if (recordRoute) {
-              const fullPath = this.$route.fullPath
-              this.$router.push(`/login?redirect=${fullPath}`)
-            } else {
-              this.$router.push('/login')
-            }
+            this.$router.push('/login')
           }
         )
       },
